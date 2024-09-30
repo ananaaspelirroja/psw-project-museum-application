@@ -17,18 +17,23 @@ import lombok.ToString;
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
+    @Column(name = "firstName", nullable = true, length = 50)
     private String firstName;
 
+    @Column(name = "lastName", nullable = true, length = 50)
     private String lastName;
 
-    @Column(unique = true)
+    @Column(name = "email", unique = true, nullable = true, length = 70)
     private String email;
 
+    @Column(name = "password", nullable = true, length = 70)
     private String password;
 
+    @Column(name = "role")
     private UserRole role;
 
     private String fullName(){
