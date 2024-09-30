@@ -1,7 +1,6 @@
-package com.project.e_commerce.entity;
+package entity;
 
 
-import com.project.e_commerce.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
 
