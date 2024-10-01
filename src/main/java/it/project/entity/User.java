@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -35,6 +37,9 @@ public class User {
 
     @Column(name = "role")
     private UserRole role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
+    private List<Order> purchases;
 
     private String fullName(){
         return firstName + " " + lastName;

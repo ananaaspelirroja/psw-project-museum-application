@@ -5,15 +5,18 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import java.util.Date;
+import java.util.List;
+
 
 @Getter
 @Setter
 @EqualsAndHashCode
 @ToString
 @Entity
-@Table(name = "item")
+@Table(name = "ticket")
 
-public class Item {
+public class Ticket {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,9 +25,6 @@ public class Item {
 
     @Column(name = "name", nullable = true, length = 50)
     private String name;
-
-    @Column(name = "bar_code", nullable = true, length = 70)
-    private String barCode;
 
     @Column(name = "description", nullable = true, length = 500)
     private String description;
@@ -35,11 +35,22 @@ public class Item {
     @Column(name = "quantity", nullable = true)
     private int quantity;
 
+    @Column(name = "start_time", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date startTime;
+
+    @Column(name = "end_time", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date endTime;
+
     @Column(name = "version", nullable = false)
     private long version;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "category_id", nullable = false) // Use a dedicated column for the foreign key
-    private Category category;
+    @JoinColumn(name = "exhibition_id", nullable = false)
+    private Exhibition exhibition;
+
+    @OneToMany(mappedBy = "ticket")
+    private List<OrderTicket> orderTickets;
 
 }
