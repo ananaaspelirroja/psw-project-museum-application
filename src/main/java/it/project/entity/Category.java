@@ -1,11 +1,15 @@
 package it.project.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 @Entity
 @Table(name = "category")
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
+
 
 public class Category {
 
