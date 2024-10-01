@@ -23,10 +23,10 @@ public class User {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "firstName", nullable = true, length = 50)
+    @Column(name = "first_name", nullable = true, length = 50)
     private String firstName;
 
-    @Column(name = "lastName", nullable = true, length = 50)
+    @Column(name = "last_name", nullable = true, length = 50)
     private String lastName;
 
     @Column(name = "email", unique = true, nullable = true, length = 70)
@@ -39,7 +39,7 @@ public class User {
     private UserRole role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
-    private List<Order> purchases;
+    private List<CustomerOrder> purchases;
 
     private String fullName(){
         return firstName + " " + lastName;

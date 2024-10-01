@@ -6,10 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.List;
-
 @Entity
-@Table(name = "exhibition")
+@Table(name = "orderTicket")
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -24,7 +22,7 @@ public class OrderTicket {
 
     @ManyToOne
     @JoinColumn(name = "order_id")
-    private Order order;
+    private CustomerOrder customerOrder;
 
     @ManyToOne
     @JoinColumn(name = "ticket_id")

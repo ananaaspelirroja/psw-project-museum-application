@@ -25,6 +25,6 @@ public class Exhibition {
     @Column(name = "description", nullable = true, length = 200)
     private String description;
 
-    @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "exhibition", cascade = CascadeType.MERGE)
     private List<Ticket> tickets;
 }
