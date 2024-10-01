@@ -19,7 +19,7 @@ public class Exhibition {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "name", nullable = true, length = 50)
+    @Column(name = "name", unique = true, nullable = true, length = 50)
     private String name;
 
     @Column(name = "description", nullable = true, length = 200)
