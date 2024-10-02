@@ -7,7 +7,11 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -35,6 +39,7 @@ public class User {
     @Column(name = "password", nullable = true, length = 70)
     private String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private UserRole role;
 
@@ -43,6 +48,10 @@ public class User {
 
     private String fullName(){
         return firstName + " " + lastName;
+    }
+
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority(this.role.getName()));
     }
 
 
