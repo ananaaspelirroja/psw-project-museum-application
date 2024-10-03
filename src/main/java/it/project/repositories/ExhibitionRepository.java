@@ -1,3 +1,4 @@
+/*
 package it.project.repositories;
 
 import it.project.entity.Exhibition;
@@ -16,3 +17,4 @@ public interface ExhibitionRepository extends JpaRepository<Exhibition, Integer>
 
 
 }
+*/

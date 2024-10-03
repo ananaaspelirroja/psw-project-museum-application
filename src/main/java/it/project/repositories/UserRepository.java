@@ -1,3 +1,4 @@
+/*
 package it.project.repositories;
 
 import it.project.entity.User;
@@ -19,3 +20,4 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     boolean existsByEmail(String email);
 }
+*/
