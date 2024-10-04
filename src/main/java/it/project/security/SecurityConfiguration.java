@@ -1,4 +1,4 @@
-/*
+
 
 package it.project.security;
 
@@ -32,9 +32,12 @@ public class SecurityConfiguration {
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
-                );
+                )
+                .oauth2ResourceServer(auth ->
+                        auth.jwt(token -> token.jwtAuthenticationConverter(new KeycloakTokenConverter())));
+
 
         return http.build();
     }
 }
-*/
+
