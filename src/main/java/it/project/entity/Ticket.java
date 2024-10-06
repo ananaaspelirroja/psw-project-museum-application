@@ -43,6 +43,7 @@ public class Ticket {
     @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
 
+    @Version
     @Column(name = "version", nullable = false)
     private long version;
 
