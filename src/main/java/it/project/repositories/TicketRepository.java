@@ -10,15 +10,14 @@ import java.util.Optional;
 
 public interface TicketRepository extends JpaRepository<Ticket, Integer> {
 
-    // Metodo per verificare l'esistenza di un ticket con un nome specifico
+
     boolean existsByName(String name);
 
-    // Metodo per cercare i ticket che contengono una stringa specifica nel nome
     List<Ticket> findByNameContaining(String name);
 
-    // Metodo per cercare un ticket per ID
     Optional<Ticket> findById(Integer id);
 
-    // Metodo per cercare tutti i ticket con paginazione
     Page<Ticket> findAll(Pageable pageable);
+
+    List<Ticket> findByExhibitionId(int exhibitionId);
 }

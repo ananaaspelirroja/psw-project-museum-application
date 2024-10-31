@@ -47,6 +47,16 @@ public class TicketController {
         return ResponseEntity.ok(ticket);
     }
 
+    @GetMapping("/by-exhibition-id/{exhibitionId}")
+    public ResponseEntity<?> findTicketsByExhibitionId(@PathVariable int exhibitionId) {
+        List<Ticket> tickets = ticketService.findTicketsByExhibitionId(exhibitionId);
+        if (tickets.isEmpty()) {
+            return ResponseEntity.ok(new ResultMessage("No tickets found for exhibition ID: " + exhibitionId));
+        }
+        return ResponseEntity.ok(tickets);
+    }
+
+
     @GetMapping
     public List<Ticket> showAllTickets() {
         return ticketService.showAllTickets();

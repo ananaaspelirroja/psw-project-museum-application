@@ -56,4 +56,9 @@ public class TicketService {
             return new ArrayList<>();
         }
     }
+
+    @Transactional(readOnly = true)
+    public List<Ticket> findTicketsByExhibitionId(int exhibitionId) {
+        return ticketRepository.findByExhibitionId(exhibitionId);
+    }
 }
