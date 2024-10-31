@@ -5,9 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
-
 
 @Getter
 @Setter
@@ -23,8 +22,7 @@ public class CustomerOrder {
     private int id;
 
     @Column(name = "order_time", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date orderTime;
+    private LocalDateTime orderTime;
 
     @Column(name = "total_amount", nullable = false)
     private int totalAmount;
@@ -33,10 +31,6 @@ public class CustomerOrder {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "customerOrder")
+    @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL)
     private List<OrderTicket> orderTickets;
-
-
-
-
 }

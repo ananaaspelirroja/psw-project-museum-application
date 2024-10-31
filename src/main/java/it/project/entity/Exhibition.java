@@ -1,8 +1,10 @@
 package it.project.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import java.util.List;
 
 @Entity
@@ -11,15 +13,13 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode
 @ToString
-
-
 public class Exhibition {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "name", unique = true, nullable = true, length = 50)
+    @Column(name = "name", unique = true, nullable = false, length = 50)
     private String name;
 
     @Column(name = "description", nullable = true, length = 200)

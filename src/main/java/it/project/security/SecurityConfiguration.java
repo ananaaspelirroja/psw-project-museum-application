@@ -46,6 +46,7 @@ public class SecurityConfiguration {
     public AuditorAware<String> auditorAware() {
         return new ApplicationAuditAware();
     }
+    // vedere dopo se va creato
 
     @Bean
     public CorsFilter corsFilter() {

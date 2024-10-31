@@ -1,6 +1,5 @@
 package it.project.entity;
 
-
 import it.project.utils.UserRole;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
@@ -27,32 +26,30 @@ public class User {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "first_name", nullable = true, length = 50)
+    @Column(name = "first_name", nullable = false, length = 50)
     private String firstName;
 
-    @Column(name = "last_name", nullable = true, length = 50)
+    @Column(name = "last_name", nullable = false, length = 50)
     private String lastName;
 
-    @Column(name = "email", unique = true, nullable = true, length = 70)
+    @Column(name = "email", unique = true, nullable = false, length = 70)
     private String email;
 
-    @Column(name = "password", nullable = true, length = 70)
+    @Column(name = "password", nullable = false, length = 70)
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role")
+    @Column(name = "role", nullable = false)
     private UserRole role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
     private List<CustomerOrder> purchases;
 
-    private String fullName(){
+    public String fullName() {
         return firstName + " " + lastName;
     }
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority(this.role.getName()));
     }
-
-
 }

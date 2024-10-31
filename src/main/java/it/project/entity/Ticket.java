@@ -5,9 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
-
 
 @Getter
 @Setter
@@ -15,7 +14,6 @@ import java.util.List;
 @ToString
 @Entity
 @Table(name = "ticket")
-
 public class Ticket {
 
     @Id
@@ -23,25 +21,23 @@ public class Ticket {
     @Column(name = "id", nullable = false)
     private int id;
 
-    @Column(name = "name", nullable = true, length = 50)
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
 
     @Column(name = "description", nullable = true, length = 500)
     private String description;
 
-    @Column(name = "price", nullable = true)
+    @Column(name = "price", nullable = false)
     private float price;
 
-    @Column(name = "quantity", nullable = true)
+    @Column(name = "quantity", nullable = false)
     private int quantity;
 
     @Column(name = "start_time", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date startTime;
+    private LocalDateTime startTime;
 
     @Column(name = "end_time", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date endTime;
+    private LocalDateTime endTime;
 
     @Version
     @Column(name = "version", nullable = false)
@@ -53,5 +49,4 @@ public class Ticket {
 
     @OneToMany(mappedBy = "ticket")
     private List<OrderTicket> orderTickets;
-
 }

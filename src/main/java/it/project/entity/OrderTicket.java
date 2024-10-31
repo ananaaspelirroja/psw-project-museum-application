@@ -7,27 +7,25 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "orderTicket")
+@Table(name = "order_ticket")
 @Getter
 @Setter
 @EqualsAndHashCode
 @ToString
-
-
 public class OrderTicket {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
     private CustomerOrder customerOrder;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ticket_id")
     private Ticket ticket;
 
-    @Column(name="quantity")
+    @Column(name = "quantity", nullable = false)
     private int quantity;
 }
