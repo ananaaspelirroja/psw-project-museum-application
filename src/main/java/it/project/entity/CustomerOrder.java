@@ -5,6 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,6 +23,9 @@ public class CustomerOrder {
     @Column(name = "id", nullable = false)
     private int id;
 
+    @Basic
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "order_time", nullable = false)
     private LocalDateTime orderTime;
 
@@ -31,6 +36,6 @@ public class CustomerOrder {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.MERGE)
     private List<OrderTicket> orderTickets;
 }

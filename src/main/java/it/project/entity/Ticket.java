@@ -47,6 +47,6 @@ public class Ticket {
     @JoinColumn(name = "exhibition_id", nullable = false)
     private Exhibition exhibition;
 
-    @OneToMany(mappedBy = "ticket")
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.MERGE)
     private List<OrderTicket> orderTickets;
 }
