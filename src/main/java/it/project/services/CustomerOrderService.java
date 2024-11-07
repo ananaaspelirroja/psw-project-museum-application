@@ -70,7 +70,7 @@ public class CustomerOrderService {
         }
         User user = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-        List<CustomerOrder> orders = customerOrderRepository.findByUserAndOrderDateBetween(user, start, end);
+        List<CustomerOrder> orders = customerOrderRepository.findByUserAndOrderDateBetween(start, end, user);
         if (orders.isEmpty()) {
             throw new OrderNotFoundException("No orders found for the specified period");
         }
