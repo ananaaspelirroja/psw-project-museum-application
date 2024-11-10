@@ -1,0 +1,17 @@
+<!-- src/app/components/exhibition-list/exhibition-list.component.html -->
+<div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+<div *ngIf="!errorMessage && exhibitions.length > 0">
+  <h2>Elenco Esibizioni</h2>
+  <ul>
+    <li *ngFor="let exhibition of exhibitions">
+      <h3>{{ exhibition.name }}</h3>
+      <p>{{ exhibition.description }}</p>
+      <p>Biglietti disponibili: {{ exhibition.tickets }}</p>
+    </li>
+  </ul>
+</div>
+
+<div *ngIf="!errorMessage && exhibitions.length === 0">
+  <p>Nessuna esibizione disponibile.</p>
+</div>

@@ -1,0 +1,92 @@
+$primary-color: #ff6347;
+$secondary-color: #4682b4;
+$background-light: #ffeedd;
+$background-gray: #f5f5f5;
+$text-color: #333;
+$text-light: #444;
+
+
+.home-container {
+  font-family: Arial, sans-serif;
+  color: $text-color;
+  padding: 1rem;
+
+  .hero {
+    background-color: $background-light;
+    padding: 2rem;
+    text-align: center;
+    color: $text-light;
+
+    h1 {
+      font-size: 2.5rem;
+      color: $primary-color;
+    }
+
+    .btn-primary {
+      margin-top: 1rem;
+      padding: 0.8rem 1.5rem;
+      background-color: $primary-color;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: darken($primary-color, 10%);
+      }
+    }
+
+    .login-reminder {
+      margin-top: 0.5rem;
+
+      a {
+        color: $secondary-color;
+        text-decoration: underline;
+
+        &:hover {
+          color: darken($secondary-color, 10%);
+        }
+      }
+    }
+  }
+
+  .exhibitions, .events, .tickets-info {
+    padding: 2rem;
+    margin-top: 2rem;
+    background-color: $background-gray;
+    border-radius: 8px;
+    text-align: center;
+
+    h2 {
+      color: $primary-color;
+    }
+
+    .btn-primary, .btn-secondary {
+      margin-top: 1rem;
+      padding: 0.8rem 1.5rem;
+      color: white;
+      font-weight: bold;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+
+      &.btn-primary {
+        background-color: $primary-color;
+
+        &:hover {
+          background-color: darken($primary-color, 10%);
+        }
+      }
+
+      &.btn-secondary {
+        background-color: $secondary-color;
+
+        &:hover {
+          background-color: lighten($secondary-color, 10%);
+        }
+      }
+    }
+  }
+}
