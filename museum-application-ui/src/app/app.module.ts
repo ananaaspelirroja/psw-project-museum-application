@@ -1,13 +1,27 @@
-import { NgModule } from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RouterModule } from '@angular/router'; // Importa RouterModule
 import { AppComponent } from './app.component';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import { HomeComponent } from './pages/home/home.component';
+import { LoginComponent } from './pages/login/login.component';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import {AppRoutingModule} from "./app-routing.module";
+import {ExhibitionListComponent} from "./pages/exhibition-list/exhibition-list.component"; // Importa RouterModule qui
 
 @NgModule({
-  declarations: [AppComponent], // Usa declarations per componenti non standalone
-  imports: [BrowserModule, RouterModule, HttpClientModule], // Aggiungi RouterModule qui
-  providers: [HttpClient],
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    LoginComponent,
+    ExhibitionListComponent
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    RouterModule, // Aggiungi RouterModule qui per abilitare il routing
+    AppRoutingModule // Importa AppRoutingModule per le configurazioni delle rotte
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA], // Aggiungi questo schema
   bootstrap: [AppComponent]
 })
 export class AppModule { }

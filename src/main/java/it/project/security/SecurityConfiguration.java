@@ -26,21 +26,12 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers(
-                                        "/auth/**",       // Allow authentication endpoints
-                                        "/swagger-ui/**", // Allow Swagger UI
-                                        "/v3/api-docs/**" // Allow OpenAPI documentation
-                                )
-                                .permitAll()
-                                .anyRequest()
-                                .authenticated()
-                )
-                .oauth2ResourceServer(auth ->
-                        auth.jwt(token -> token.jwtAuthenticationConverter(new KeycloakTokenConverter())));
-
+                        req.anyRequest().permitAll() // Permetti tutte le richieste senza autenticazione
+                );
 
         return http.build();
     }
+
 
     @Bean
     public AuditorAware<String> auditorAware() {

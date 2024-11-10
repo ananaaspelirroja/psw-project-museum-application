@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/exhibitions")
-//@CrossOrigin("*") // Permette richieste CORS da tutte le origini - VEDERE DOPO
+@CrossOrigin("*") // Permette richieste CORS da tutte le origini - VEDERE DOPO
 public class ExhibitionController {
 
     @Autowired
