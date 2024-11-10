@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import {UserProfile} from "./user-profile";
+import { UserProfile } from "./user-profile";
 import Keycloak from 'keycloak-js';
-
 
 @Injectable({
   providedIn: 'root'
 })
 export class KeycloakService {
   private _keycloak: Keycloak | undefined;
+  private initialized = false; // Variabile per tracciare l'inizializzazione
 
   get keycloak() {
     if (!this._keycloak) {
@@ -27,16 +27,26 @@ export class KeycloakService {
   }
 
   async init(): Promise<void> {
-    const authenticated = await this.keycloak.init({
-      onLoad: 'login-required',
-      checkLoginIframe: false
-    });
+    console.log('Inizio di Keycloak init');  // Verifica se init viene chiamato
+    try {
+      const authenticated = await this.keycloak.init({
+        onLoad: 'login-required',
+        checkLoginIframe: false
+      });
 
-    if (authenticated) {
-      this._profile = (await this.keycloak.loadUserProfile()) as UserProfile;
-      this._profile.token = this.keycloak.token || '';
+      if (authenticated) {
+        console.log('Utente autenticato con successo');
+        this._profile = (await this.keycloak.loadUserProfile()) as UserProfile;
+        this._profile.token = this.keycloak.token || '';
+      } else {
+        console.warn('Utente non autenticato');
+      }
+    } catch (error) {
+      console.error('Errore durante l\'inizializzazione di Keycloak', error);
     }
+    console.log('Fine di Keycloak init');  // Verifica se init completa l'esecuzione
   }
+
 
   login() {
     return this.keycloak.login();
@@ -51,10 +61,9 @@ export class KeycloakService {
   }
 
   async getToken(): Promise<string> {
-    // Ensure token is fresh
     if (this.keycloak.token) {
       await this.keycloak.updateToken(30).catch(() => {
-        this.login(); // Redirect to login if token cannot be refreshed
+        this.login(); // Redirect se il token non può essere aggiornato
       });
       return this.keycloak.token!;
     }

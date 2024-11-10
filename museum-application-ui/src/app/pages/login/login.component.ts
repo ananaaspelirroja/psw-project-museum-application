@@ -6,15 +6,11 @@ import {KeycloakService} from "../../services/services/keycloak/keycloak.service
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent  {
   constructor(
     private ss: KeycloakService
   ) {
   }
 
-  async ngOnInit(): Promise<void> {
-    await this.ss.init();
-    await this.ss.login();
-  }
 
 }
