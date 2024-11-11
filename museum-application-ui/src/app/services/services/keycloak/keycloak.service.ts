@@ -82,4 +82,9 @@ export class KeycloakService {
   hasRole(role: string): boolean {
     return this.keycloak.hasRealmRole(role);
   }
+
+  // Getter per il nome dell'utente
+  get userName(): string {
+    return this._profile?.firstName || 'Ospite';
+  }
 }

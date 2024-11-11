@@ -9,7 +9,8 @@ import {AppRoutingModule} from "./app-routing.module";
 import {ExhibitionListComponent} from "./pages/exhibition-list/exhibition-list.component";
 import {ExhibitionService} from "./services/services/show-all-exhibitions/exhibition-service.service";
 import {HttpClientModule} from "@angular/common/http";
-import {KeycloakService} from "./services/services/keycloak/keycloak.service"; // Importa RouterModule qui
+import {KeycloakService} from "./services/services/keycloak/keycloak.service";
+import {MenuComponent} from "./modules/menu/menu.component"; // Importa RouterModule qui
 
 
 
@@ -18,7 +19,8 @@ import {KeycloakService} from "./services/services/keycloak/keycloak.service"; /
     AppComponent,
     HomeComponent,
     LoginComponent,
-    ExhibitionListComponent
+    ExhibitionListComponent,
+    MenuComponent
   ],
   imports: [
     BrowserModule,
@@ -26,6 +28,9 @@ import {KeycloakService} from "./services/services/keycloak/keycloak.service"; /
     FormsModule,
     RouterModule, // Aggiungi RouterModule qui per abilitare il routing
     AppRoutingModule // Importa AppRoutingModule per le configurazioni delle rotte
+  ],
+  exports: [
+  MenuComponent // opzionale, per permettere il suo utilizzo in altri moduli
   ],
   providers: [
     ExhibitionService,

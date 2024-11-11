@@ -1,0 +1,43 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="javascript:void(0)">Museo</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" routerLink="/home">
+            <i class="fas fa-home-alt"></i>&nbsp;Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/exhibitions">
+            <i class="fas fa-palette"></i>&nbsp;Esibizioni
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/tickets">
+            <i class="fas fa-ticket-alt"></i>&nbsp;I miei biglietti
+          </a>
+        </li>
+      </ul>
+      <form class="d-flex gap-2 align-items-center" role="search">
+        <input class="form-control" type="search" placeholder="Cerca esibizioni" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit"><i class="fas fa-search"></i></button>
+        <span>Benvenut*</span>
+        <span class="text-capitalize fw-bold">{{ keycloakService.userName }}</span>
+
+        <!-- Condizionale per login/logout -->
+        <button *ngIf="keycloakService.isAuthenticated(); else login" class="btn btn-link" (click)="logout()">
+          <i class="fas fa-door-open"></i> Logout
+        </button>
+        <ng-template #login>
+          <a class="btn btn-link" (click)="keycloakService.login()">
+            <i class="fas fa-door-open"></i> Login
+          </a>
+        </ng-template>
+      </form>
+    </div>
+  </div>
+</nav>
