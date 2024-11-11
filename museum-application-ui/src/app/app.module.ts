@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import {AppRoutingModule} from "./app-routing.module";
 import {ExhibitionListComponent} from "./pages/exhibition-list/exhibition-list.component";
@@ -23,6 +23,7 @@ import {MenuComponent} from "./modules/menu/menu.component"; // Importa RouterMo
     MenuComponent
   ],
   imports: [
+    ReactiveFormsModule,
     BrowserModule,
     HttpClientModule,
     FormsModule,

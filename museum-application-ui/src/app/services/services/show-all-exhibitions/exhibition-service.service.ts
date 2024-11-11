@@ -22,4 +22,13 @@ export class ExhibitionService {
     const params = new HttpParams().set('name', name);
     return this.http.get<Exhibition[]>(`${this.apiUrl}/search`, { params });
   }
+
+  // Metodo per aggiungere un'esibizione
+  addExhibition(exhibition: Exhibition): Observable<Exhibition> {
+    return this.http.post<Exhibition>(`${this.apiUrl}`, exhibition);
+  }
+
+  deleteExhibition(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }

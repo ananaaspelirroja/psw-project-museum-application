@@ -2,8 +2,7 @@ package it.project.utils;
 
 public enum UserRole {
     ROLE_ADMIN("ROLE_ADMIN"),
-    ROLE_USER("ROLE_USER"),
-    ROLE_GUEST("ROLE_GUEST");
+    ROLE_USER("ROLE_USER");
 
     private final String name;
 

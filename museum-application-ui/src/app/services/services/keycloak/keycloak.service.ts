@@ -79,8 +79,9 @@ export class KeycloakService {
     return this._profile;
   }
 
+  // Metodo per controllare se l'utente ha un ruolo specifico
   hasRole(role: string): boolean {
-    return this.keycloak.hasRealmRole(role);
+    return this.keycloak.tokenParsed?.realm_access?.roles.includes(role) ?? false;
   }
 
   // Getter per il nome dell'utente

@@ -4,18 +4,54 @@
   <app-menu></app-menu>
   <h2>Esibizioni</h2>
 
-  <!-- Condizione per mostrare le esibizioni o il messaggio "Nessuna esibizione trovata" -->
+  <!-- Mostra il pulsante "Aggiungi una nuova mostra" solo per gli utenti con ruolo ROLE_ADMIN -->
+  <button *ngIf="keycloakService.hasRole('ROLE_ADMIN')" class="btn btn-primary add-exhibition-btn" (click)="toggleForm()">
+    {{ showForm ? 'Annulla' : 'Aggiungi una nuova mostra' }}
+  </button>
+
+  <!-- Form per aggiungere una nuova esibizione -->
+  <div *ngIf="showForm" class="exhibition-form">
+    <h3>Nuova Esibizione</h3>
+    <form [formGroup]="exhibitionForm" (ngSubmit)="addExhibition()">
+      <div class="form-group">
+        <label for="name">Nome</label>
+        <input id="name" type="text" formControlName="name" class="form-control" required />
+        <div *ngIf="exhibitionForm.get('name')?.invalid && exhibitionForm.get('name')?.touched" class="error">
+          Il nome è obbligatorio.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Descrizione</label>
+        <textarea id="description" formControlName="description" class="form-control" required></textarea>
+        <div *ngIf="exhibitionForm.get('description')?.invalid && exhibitionForm.get('description')?.touched" class="error">
+          La descrizione è obbligatoria.
+        </div>
+      </div>
+
+
+      <button type="submit" class="btn btn-success" [disabled]="exhibitionForm.invalid">Salva Esibizione</button>
+    </form>
+
+  </div>
+
+  <!-- Elenco delle esibizioni -->
   <div *ngIf="exhibitions.length > 0; else noExhibitions">
     <div *ngFor="let exhibition of exhibitions" class="exhibition-item">
       <div class="exhibition-name">{{ exhibition.name }}</div>
       <div class="exhibition-description">{{ exhibition.description }}</div>
       <div class="exhibition-tickets">Biglietti disponibili: {{ exhibition.tickets }}</div>
+
+      <!-- Pulsante di eliminazione, visibile solo per ROLE_ADMIN -->
+      <button *ngIf="keycloakService.hasRole('ROLE_ADMIN')" (click)="deleteExhibition(exhibition.id!)" class="btn btn-danger">
+        Elimina Esibizione
+      </button>
     </div>
   </div>
 
+
   <!-- Messaggio da mostrare se non ci sono esibizioni -->
   <ng-template #noExhibitions>
-    <p class="no-exhibitions-message">Nessuna esibizione trovata con il nome specificato.</p>
+    <p class="no-exhibitions-message">Nessuna esibizione trovata.</p>
   </ng-template>
 </div>
-
