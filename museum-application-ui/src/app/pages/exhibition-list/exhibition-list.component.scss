@@ -1,10 +1,57 @@
-.exhibition-item {
-  border: 1px solid #ddd;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 4px;
-}
+// src/styles/_variables.scss
+$primary-color: #ff6347;
+$secondary-color: #4682b4;
+$background-light: #ffeedd;
+$background-gray: #f5f5f5;
+$text-color: #333;
+$text-light: #444;
 
-.error {
-  color: red;
+
+.exhibition-list-container {
+  font-family: Arial, sans-serif;
+  padding: 1.5rem;
+  background-color: $background-gray;
+  border-radius: 8px;
+  color: $text-color;
+
+  h2 {
+    color: $primary-color;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .exhibition-item {
+    background-color: $background-light;
+    border: 1px solid lighten($text-color, 40%);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .exhibition-name {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: $primary-color;
+      margin-bottom: 0.5rem;
+    }
+
+    .exhibition-description {
+      color: $text-light;
+      font-size: 1rem;
+      line-height: 1.5;
+      margin-bottom: 0.5rem;
+    }
+
+    .exhibition-tickets {
+      color: $secondary-color;
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+  }
 }

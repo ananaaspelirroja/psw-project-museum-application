@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Exhibition } from '../../models/exhibition';
 
@@ -15,5 +15,11 @@ export class ExhibitionService {
   // Metodo per ottenere tutte le esibizioni
   getAllExhibitions(): Observable<Exhibition[]> {
     return this.http.get<Exhibition[]>(this.apiUrl);
+  }
+
+  // Metodo per cercare esibizioni per nome
+  searchExhibitions(name: string): Observable<Exhibition[]> {
+    const params = new HttpParams().set('name', name);
+    return this.http.get<Exhibition[]>(`${this.apiUrl}/search`, { params });
   }
 }

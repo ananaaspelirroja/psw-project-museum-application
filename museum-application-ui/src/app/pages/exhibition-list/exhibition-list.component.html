@@ -1,17 +1,21 @@
-<!-- src/app/components/exhibition-list/exhibition-list.component.html -->
-<div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+<div class="exhibition-list-container">
 
-<div *ngIf="!errorMessage && exhibitions.length > 0">
-  <h2>Elenco Esibizioni</h2>
-  <ul>
-    <li *ngFor="let exhibition of exhibitions">
-      <h3>{{ exhibition.name }}</h3>
-      <p>{{ exhibition.description }}</p>
-      <p>Biglietti disponibili: {{ exhibition.tickets }}</p>
-    </li>
-  </ul>
+  <!-- Menu Component -->
+  <app-menu></app-menu>
+  <h2>Esibizioni</h2>
+
+  <!-- Condizione per mostrare le esibizioni o il messaggio "Nessuna esibizione trovata" -->
+  <div *ngIf="exhibitions.length > 0; else noExhibitions">
+    <div *ngFor="let exhibition of exhibitions" class="exhibition-item">
+      <div class="exhibition-name">{{ exhibition.name }}</div>
+      <div class="exhibition-description">{{ exhibition.description }}</div>
+      <div class="exhibition-tickets">Biglietti disponibili: {{ exhibition.tickets }}</div>
+    </div>
+  </div>
+
+  <!-- Messaggio da mostrare se non ci sono esibizioni -->
+  <ng-template #noExhibitions>
+    <p class="no-exhibitions-message">Nessuna esibizione trovata con il nome specificato.</p>
+  </ng-template>
 </div>
 
-<div *ngIf="!errorMessage && exhibitions.length === 0">
-  <p>Nessuna esibizione disponibile.</p>
-</div>
