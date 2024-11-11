@@ -27,11 +27,11 @@ export class KeycloakService {
   }
 
   async init(): Promise<void> {
-    console.log('Inizio di Keycloak init');  // Verifica se init viene chiamato
+    console.log('Inizio di Keycloak init');
     try {
       const authenticated = await this.keycloak.init({
-        onLoad: 'login-required',
-        checkLoginIframe: false
+        onLoad: 'check-sso', // Controlla solo lo stato della sessione, senza forzare il login
+        checkLoginIframe: false,
       });
 
       if (authenticated) {
@@ -39,13 +39,15 @@ export class KeycloakService {
         this._profile = (await this.keycloak.loadUserProfile()) as UserProfile;
         this._profile.token = this.keycloak.token || '';
       } else {
-        console.warn('Utente non autenticato');
+        console.warn('Utente non autenticato, avvio login');
+        await this.login(); // Chiama esplicitamente login se l’utente non è autenticato
       }
     } catch (error) {
       console.error('Errore durante l\'inizializzazione di Keycloak', error);
     }
-    console.log('Fine di Keycloak init');  // Verifica se init completa l'esecuzione
+    console.log('Fine di Keycloak init');
   }
+
 
 
   login() {

@@ -1,4 +1,4 @@
-import {APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -11,14 +11,6 @@ import {ExhibitionService} from "./services/services/show-all-exhibitions/exhibi
 import {HttpClientModule} from "@angular/common/http";
 import {KeycloakService} from "./services/services/keycloak/keycloak.service"; // Importa RouterModule qui
 
-
-export function initializeKeycloak(keycloak: KeycloakService) {
-  return () => keycloak.init().then(() => {
-    console.log('Keycloak inizializzato');
-  }).catch(error => {
-    console.error('Errore durante l\'inizializzazione di Keycloak in APP_INITIALIZER', error);
-  });
-}
 
 
 @NgModule({
@@ -37,12 +29,7 @@ export function initializeKeycloak(keycloak: KeycloakService) {
   ],
   providers: [
     ExhibitionService,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initializeKeycloak,
-      deps: [KeycloakService],
-      multi: true,
-    },
+    KeycloakService, // Mantieni il servizio disponibile senza `APP_INITIALIZER`
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA], // Aggiungi questo schema
   bootstrap: [AppComponent]
