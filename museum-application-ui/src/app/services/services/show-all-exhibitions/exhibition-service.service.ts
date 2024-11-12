@@ -31,4 +31,8 @@ export class ExhibitionService {
   deleteExhibition(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  getExhibitionById(id: number): Observable<Exhibition> {
+    return this.http.get<Exhibition>(`${this.apiUrl}/${id}`);
+  }
 }

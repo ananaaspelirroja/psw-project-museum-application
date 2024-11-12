@@ -6,6 +6,7 @@ import it.project.utils.ResultMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class ExhibitionController {
     private ExhibitionService exhibitionService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> createExhibition(@RequestBody Exhibition exhibition) {
         try {
             Exhibition createdExhibition = exhibitionService.addExhibition(exhibition);
@@ -45,6 +47,7 @@ public class ExhibitionController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> updateExhibition(@PathVariable int id, @RequestBody Exhibition updatedExhibition) {
         try {
             Exhibition exhibition = exhibitionService.updateExhibition(id, updatedExhibition);
@@ -55,6 +58,7 @@ public class ExhibitionController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResultMessage> deleteExhibition(@PathVariable int id) {
         try {
             exhibitionService.deleteExhibition(id);

@@ -45,20 +45,22 @@ public class TicketService {
         return ticketRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
-    public List<Ticket> showAllTickets(int pageNumber, int pageSize, String sortBy) {
-        Pageable paging = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
-        Page<Ticket> ticketsInPage = ticketRepository.findAll(paging);
-        if ( ticketsInPage.hasContent() ) {
-            return ticketsInPage.getContent();
-        }
-        else {
-            return new ArrayList<>();
-        }
-    }
 
     @Transactional(readOnly = true)
     public List<Ticket> findTicketsByExhibitionId(int exhibitionId) {
         return ticketRepository.findByExhibitionId(exhibitionId);
+    }
+
+    @Transactional
+    public Ticket updateTicketQuantity(int ticketId, int quantity) {
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new IllegalArgumentException("Ticket not found"));
+        ticket.setQuantity(quantity);
+        return ticketRepository.save(ticket);
+    }
+
+    @Transactional
+    public void deleteTicket(int ticketId) {
+        ticketRepository.deleteById(ticketId);
     }
 }

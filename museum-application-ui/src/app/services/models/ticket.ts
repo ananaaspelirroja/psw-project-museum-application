@@ -6,13 +6,14 @@ import { Exhibition } from '../models/exhibition';
 import { OrderTicket } from '../models/order-ticket';
 export interface Ticket {
   description?: string;
-  endTime?: string;
+  startTime?: string | null; // Nullable
+  endTime?: string | null;   // Nullable
   exhibition?: Exhibition;
   id?: number;
   name?: string;
   orderTickets?: Array<OrderTicket>;
   price?: number;
   quantity?: number;
-  startTime?: string;
   version?: number;
 }
+

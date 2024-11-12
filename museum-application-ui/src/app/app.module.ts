@@ -10,7 +10,8 @@ import {ExhibitionListComponent} from "./pages/exhibition-list/exhibition-list.c
 import {ExhibitionService} from "./services/services/show-all-exhibitions/exhibition-service.service";
 import {HttpClientModule} from "@angular/common/http";
 import {KeycloakService} from "./services/services/keycloak/keycloak.service";
-import {MenuComponent} from "./modules/menu/menu.component"; // Importa RouterModule qui
+import {MenuComponent} from "./modules/menu/menu.component";
+import {TicketListComponent} from "./pages/ticket-list/ticket-list.component";
 
 
 
@@ -20,7 +21,8 @@ import {MenuComponent} from "./modules/menu/menu.component"; // Importa RouterMo
     HomeComponent,
     LoginComponent,
     ExhibitionListComponent,
-    MenuComponent
+    MenuComponent,
+    TicketListComponent
   ],
   imports: [
     ReactiveFormsModule,

@@ -40,6 +40,7 @@
     <div *ngFor="let exhibition of exhibitions" class="exhibition-item">
       <div class="exhibition-name">{{ exhibition.name }}</div>
       <div class="exhibition-description">{{ exhibition.description }}</div>
+      <div class="exhibition-id">Codice della mostra: {{ exhibition.id }}</div>
       <div class="exhibition-tickets">Biglietti disponibili: {{ exhibition.tickets }}</div>
 
       <!-- Pulsante di eliminazione, visibile solo per ROLE_ADMIN -->

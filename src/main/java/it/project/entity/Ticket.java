@@ -1,5 +1,6 @@
 package it.project.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -33,10 +34,10 @@ public class Ticket {
     @Column(name = "quantity", nullable = false)
     private int quantity;
 
-    @Column(name = "start_time", nullable = false)
+    @Column(name = "start_time", nullable = true)
     private LocalDateTime startTime;
 
-    @Column(name = "end_time", nullable = false)
+    @Column(name = "end_time", nullable = true)
     private LocalDateTime endTime;
 
     @Version
@@ -47,6 +48,7 @@ public class Ticket {
     @JoinColumn(name = "exhibition_id", nullable = false)
     private Exhibition exhibition;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.MERGE)
     private List<OrderTicket> orderTickets;
 }

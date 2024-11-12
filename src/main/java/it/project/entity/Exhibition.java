@@ -1,5 +1,6 @@
 package it.project.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -26,5 +27,6 @@ public class Exhibition {
     private String description;
 
     @OneToMany(mappedBy = "exhibition", cascade = CascadeType.MERGE)
+    @JsonIgnore
     private List<Ticket> tickets;
 }
