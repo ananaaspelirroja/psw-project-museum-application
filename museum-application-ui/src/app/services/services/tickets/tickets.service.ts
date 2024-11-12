@@ -1,6 +1,6 @@
 
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {Ticket} from "../../models/ticket";
 
@@ -20,9 +20,12 @@ export class TicketService {
     return this.http.post<Ticket>(`${this.apiUrl}`, ticket);
   }
 
-  updateTicketQuantity(id: number, quantity: number): Observable<Ticket> {
-    return this.http.patch<Ticket>(`${this.apiUrl}/${id}`, { quantity });
+  updateTicketQuantity(ticketId: number, newQuantity: number): Observable<Ticket> {
+    const params = new HttpParams().set('quantity', newQuantity.toString());
+    return this.http.put<Ticket>(`${this.apiUrl}/${ticketId}/quantity`, null, { params });
   }
+
+
 
   deleteTicket(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);

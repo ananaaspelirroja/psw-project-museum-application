@@ -7,6 +7,9 @@
     {{ showForm ? 'Annulla' : 'Aggiungi un nuovo ticket' }}
   </button>
 
+
+
+
   <!-- Form per aggiungere un nuovo ticket -->
   <div *ngIf="showForm" class="ticket-form">
     <h3>Nuovo Ticket</h3>
@@ -48,8 +51,23 @@
       <div class="ticket-price">Prezzo: {{ ticket.price | currency }}</div>
       <div class="ticket-quantity">Quantità disponibile: {{ ticket.quantity }}</div>
 
+      <!-- Quantità o campo per modificare la quantità -->
+      <div *ngIf="editingTicket?.id === ticket.id; else showQuantity">
+        <label for="newQuantity">Nuova Quantità:</label>
+        <input id="newQuantity" type="number" [(ngModel)]="newQuantity" class="form-control" min="0" />
+        <button (click)="updateTicketQuantity()" class="btn btn-success">Salva</button>
+        <button (click)="cancelEdit()" class="btn btn-secondary">Annulla</button>
+      </div>
+
+      <ng-template #showQuantity>
+        <div class="ticket-quantity">Quantità disponibile: {{ ticket.quantity }}</div>
+      </ng-template>
+
       <button *ngIf="isAdmin" (click)="editTicket(ticket)" class="btn btn-warning">Modifica</button>
       <button *ngIf="isAdmin" (click)="deleteTicket(ticket.id!)" class="btn btn-danger">Elimina</button>
+
+      <!-- Bottone Compra, visibile solo agli utenti con ruolo ROLE_USER -->
+      <button *ngIf="isUser" (click)="navigateToCart(ticket.id!)">Compra</button>
     </div>
   </div>
 

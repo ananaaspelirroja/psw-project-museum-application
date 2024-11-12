@@ -6,6 +6,7 @@ import { TicketService } from '../../services/services/tickets/tickets.service';
 import { Ticket } from '../../services/models/ticket';
 import { Exhibition } from '../../services/models/exhibition';
 import {ExhibitionService} from "../../services/services/show-all-exhibitions/exhibition-service.service";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ticket-list',
@@ -15,6 +16,7 @@ import {ExhibitionService} from "../../services/services/show-all-exhibitions/ex
 export class TicketListComponent implements OnInit {
   tickets: Ticket[] = [];
   isAdmin: boolean = false;
+  isUser: boolean = false; // Variabile per controllare se è un utente
   ticketForm: FormGroup;
   showForm: boolean = false;
   editingTicket: Ticket | null = null;
@@ -24,7 +26,8 @@ export class TicketListComponent implements OnInit {
     private ticketService: TicketService,
     private keycloakService: KeycloakService,
     private fb: FormBuilder,
-    private exhibitionService: ExhibitionService // Aggiungi ExhibitionService
+    private exhibitionService: ExhibitionService,
+    private router: Router,
   ) {
     // Inizializza il form per un nuovo ticket con i campi nullable
     this.ticketForm = this.fb.group({
@@ -40,8 +43,16 @@ export class TicketListComponent implements OnInit {
 
   async ngOnInit() {
     await this.keycloakService.init();
+
+    // Imposta i ruoli dell'utente
     this.isAdmin = this.keycloakService.hasRole('ROLE_ADMIN');
+    this.isUser = this.keycloakService.hasRole('ROLE_USER');
+
     this.loadTickets();
+  }
+
+  navigateToCart(ticketId: number): void {
+    this.router.navigate(['/cart'], { queryParams: { ticketId } });
   }
 
   loadTickets() {
@@ -96,26 +107,36 @@ export class TicketListComponent implements OnInit {
   }
 
   editTicket(ticket: Ticket) {
-    this.editingTicket = { ...ticket };
-    this.newQuantity = ticket.quantity ?? null; // Imposta null se quantity è undefined
+    this.editingTicket = { ...ticket }; // Clona il ticket corrente per modificarlo
+    this.newQuantity = ticket.quantity ?? null; // Imposta la nuova quantità iniziale
   }
 
+  updateTicketQuantity() {
+    if (this.editingTicket && this.newQuantity !== null) {
+      const updatedTicket = { ...this.editingTicket, quantity: this.newQuantity };
 
-  updateTicket(ticketId: number, newQuantity: number | null) {
-    if (newQuantity !== null) {
-      this.ticketService.updateTicketQuantity(ticketId, newQuantity).subscribe(updatedTicket => {
-        const index = this.tickets.findIndex(t => t.id === updatedTicket.id);
-        if (index > -1) {
-          this.tickets[index] = { ...updatedTicket };
+      this.ticketService.updateTicketQuantity(updatedTicket.id!, this.newQuantity).subscribe({
+        next: (updatedTicket) => {
+          const index = this.tickets.findIndex(t => t.id === updatedTicket.id);
+          if (index > -1) {
+            this.tickets[index] = { ...updatedTicket };
+          }
+          alert('Quantità aggiornata con successo');
+          this.cancelEdit();
+        },
+        error: (err) => {
+          console.error("Errore aggiornando il ticket:", err);
+          alert('Errore nell\'aggiornamento della quantità');
         }
-        alert('Quantità aggiornata con successo');
-        this.editingTicket = null;
-        this.newQuantity = null;
       });
-    } else {
-      console.error("Valore della quantità non valido.");
     }
   }
+
+  cancelEdit() {
+    this.editingTicket = null;
+    this.newQuantity = null;
+  }
+
 
   deleteTicket(ticketId: number) {
     if (confirm('Sei sicuro di voler eliminare questo ticket?')) {
@@ -124,10 +145,5 @@ export class TicketListComponent implements OnInit {
         alert('Ticket eliminato con successo');
       });
     }
-  }
-
-  cancelEdit() {
-    this.editingTicket = null;
-    this.newQuantity = null;
   }
 }
