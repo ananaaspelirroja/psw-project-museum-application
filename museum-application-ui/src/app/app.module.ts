@@ -12,6 +12,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {KeycloakService} from "./services/services/keycloak/keycloak.service";
 import {MenuComponent} from "./modules/menu/menu.component";
 import {TicketListComponent} from "./pages/ticket-list/ticket-list.component";
+import {CartComponent} from "./modules/cart/cart.component";
 
 
 
@@ -22,7 +23,8 @@ import {TicketListComponent} from "./pages/ticket-list/ticket-list.component";
     LoginComponent,
     ExhibitionListComponent,
     MenuComponent,
-    TicketListComponent
+    TicketListComponent,
+    CartComponent
   ],
   imports: [
     ReactiveFormsModule,

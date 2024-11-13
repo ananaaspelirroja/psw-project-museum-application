@@ -9,7 +9,7 @@ export interface Ticket {
   startTime?: string | null; // Nullable
   endTime?: string | null;   // Nullable
   exhibition?: Exhibition;
-  id?: number;
+  id: number;
   name?: string;
   orderTickets?: Array<OrderTicket>;
   price?: number;

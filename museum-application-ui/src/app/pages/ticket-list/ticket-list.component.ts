@@ -1,12 +1,11 @@
-// ticket-list.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { KeycloakService } from "../../services/services/keycloak/keycloak.service";
 import { TicketService } from '../../services/services/tickets/tickets.service';
 import { Ticket } from '../../services/models/ticket';
-import { Exhibition } from '../../services/models/exhibition';
-import {ExhibitionService} from "../../services/services/show-all-exhibitions/exhibition-service.service";
+import { ExhibitionService } from "../../services/services/show-all-exhibitions/exhibition-service.service";
 import { Router } from '@angular/router';
+import { CartComponent } from "../../modules/cart/cart.component";
 
 @Component({
   selector: 'app-ticket-list',
@@ -14,13 +13,16 @@ import { Router } from '@angular/router';
   styleUrls: ['./ticket-list.component.scss']
 })
 export class TicketListComponent implements OnInit {
+  @ViewChild('cart') cart!: CartComponent; // Definisci la referenza del cart component
+
   tickets: Ticket[] = [];
   isAdmin: boolean = false;
-  isUser: boolean = false; // Variabile per controllare se è un utente
+  isUser: boolean = false;
   ticketForm: FormGroup;
   showForm: boolean = false;
   editingTicket: Ticket | null = null;
   newQuantity: number | null = null;
+  selectedQuantities: { [ticketId: number]: number } = {}; // Traccia le quantità selezionate
 
   constructor(
     private ticketService: TicketService,
@@ -29,30 +31,22 @@ export class TicketListComponent implements OnInit {
     private exhibitionService: ExhibitionService,
     private router: Router,
   ) {
-    // Inizializza il form per un nuovo ticket con i campi nullable
     this.ticketForm = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
       price: [0, [Validators.required, Validators.min(0)]],
       quantity: [0, [Validators.required, Validators.min(0)]],
       exhibition: ['', Validators.required],
-      startTime: [null], // Nullable
-      endTime: [null]     // Nullable
+      startTime: [null],
+      endTime: [null]
     });
   }
 
   async ngOnInit() {
     await this.keycloakService.init();
-
-    // Imposta i ruoli dell'utente
     this.isAdmin = this.keycloakService.hasRole('ROLE_ADMIN');
     this.isUser = this.keycloakService.hasRole('ROLE_USER');
-
     this.loadTickets();
-  }
-
-  navigateToCart(ticketId: number): void {
-    this.router.navigate(['/cart'], { queryParams: { ticketId } });
   }
 
   loadTickets() {
@@ -70,20 +64,15 @@ export class TicketListComponent implements OnInit {
     this.showForm = !this.showForm;
   }
 
-
   addTicket() {
     if (this.ticketForm.valid) {
       const newTicket: Ticket = this.ticketForm.value;
+      const exhibitionId = newTicket.exhibition as unknown as number;
 
-      // Verifica che 'exhibition' contenga solo l'ID prima di passarlo
-      const exhibitionId = newTicket.exhibition as unknown as number; // Assicurati che sia di tipo 'number'
-
-      // Recupera l'exhibition usando l'ID inserito
       this.exhibitionService.getExhibitionById(exhibitionId).subscribe({
         next: (exhibition) => {
-          newTicket.exhibition = exhibition; // Assegna l'oggetto Exhibition al ticket
+          newTicket.exhibition = exhibition;
 
-          // Aggiungi il ticket una volta associata l'exhibition
           this.ticketService.createTicket(newTicket).subscribe({
             next: (createdTicket) => {
               this.tickets.push(createdTicket);
@@ -102,13 +91,18 @@ export class TicketListComponent implements OnInit {
           alert('Exhibition non trovata.');
         }
       });
-
     }
   }
 
+  addToCart(ticket: Ticket): void {
+    // @ts-ignore
+    const quantity = this.selectedQuantities[ticket.id] || 1; // Quantità selezionata o 1 come default
+    this.cart.addToCart(ticket, quantity);
+  }
+
   editTicket(ticket: Ticket) {
-    this.editingTicket = { ...ticket }; // Clona il ticket corrente per modificarlo
-    this.newQuantity = ticket.quantity ?? null; // Imposta la nuova quantità iniziale
+    this.editingTicket = { ...ticket };
+    this.newQuantity = ticket.quantity ?? null;
   }
 
   updateTicketQuantity() {
@@ -136,7 +130,6 @@ export class TicketListComponent implements OnInit {
     this.editingTicket = null;
     this.newQuantity = null;
   }
-
 
   deleteTicket(ticketId: number) {
     if (confirm('Sei sicuro di voler eliminare questo ticket?')) {

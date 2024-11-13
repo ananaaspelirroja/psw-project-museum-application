@@ -1,0 +1,132 @@
+$primary-color: #ff6347;
+$secondary-color: #4682b4;
+$background-light: #ffeedd;
+$background-gray: #f5f5f5;
+$text-color: #333;
+$text-light: #444;
+
+.cart-container {
+  font-family: Arial, sans-serif;
+  padding: 1.5rem;
+  background-color: $background-gray;
+  border-radius: 8px;
+  color: $text-color;
+
+  h2 {
+    color: $primary-color;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .cart-item {
+    background-color: $background-light;
+    border: 1px solid lighten($text-color, 40%);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .cart-ticket-name {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: $primary-color;
+      margin-bottom: 0.5rem;
+    }
+
+    .cart-ticket-description {
+      color: $text-light;
+      font-size: 1rem;
+      line-height: 1.5;
+      margin-bottom: 0.5rem;
+    }
+
+    .cart-ticket-price, .cart-total-price {
+      font-size: 1rem;
+      font-weight: bold;
+      color: $text-color;
+    }
+
+    .cart-quantity {
+      display: flex;
+      align-items: center;
+      margin-top: 0.5rem;
+
+      label {
+        margin-right: 0.5rem;
+        font-weight: bold;
+        color: $secondary-color;
+      }
+
+      input {
+        width: 60px;
+        padding: 0.25rem;
+        border: 1px solid lighten($text-color, 40%);
+        border-radius: 4px;
+      }
+    }
+  }
+
+  .total-cart-container {
+    margin-top: 20px;
+    text-align: center;
+
+    h2 {
+      font-size: 1.5rem;
+      color: $primary-color;
+    }
+
+    .total-cart {
+      font-size: 2.5em;
+      color: $primary-color;
+      font-weight: bold;
+    }
+  }
+
+  .cart-actions {
+    text-align: center;
+    margin-top: 1rem;
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      font-size: 1rem;
+      font-weight: bold;
+
+      &.btn-danger {
+        background-color: darken($primary-color, 10%);
+        color: white;
+        border: none;
+        margin-right: 0.5rem;
+
+        &:hover {
+          background-color: darken($primary-color, 20%);
+        }
+      }
+
+      &.btn-primary {
+        background-color: $secondary-color;
+        color: white;
+        border: none;
+
+        &:hover {
+          background-color: darken($secondary-color, 10%);
+        }
+      }
+    }
+  }
+}
+
+.no-tickets-message {
+  color: $text-light;
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 1rem;
+}

@@ -23,7 +23,6 @@ public class CustomerOrder {
     @Column(name = "id", nullable = false)
     private int id;
 
-    @Basic
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "order_time", nullable = false)
@@ -36,6 +35,15 @@ public class CustomerOrder {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderTicket> orderTickets;
+
+    @Version
+    @Column(name = "version", nullable = false)
+    private long version;  // Campo per ottimistic locking
+
+    @Column(name = "confirmed", nullable = false)
+    private boolean confirmed = false;
+
 }
+

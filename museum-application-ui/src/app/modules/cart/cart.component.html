@@ -1,0 +1,29 @@
+<div class="cart-container">
+  <h2>Il tuo Carrello</h2>
+
+  <div *ngFor="let item of cartItems" class="cart-item">
+    <div class="cart-ticket-name">{{ item.ticket.name }}</div>
+    <p class="cart-ticket-description">{{ item.ticket.description }}</p>
+    <p class="cart-ticket-price">Prezzo unitario: {{ item.ticket.price | currency }}</p>
+    <div class="cart-quantity">
+      <label for="quantity">Quantità:</label>
+      <input type="number" [(ngModel)]="item.quantity" (ngModelChange)="updateQuantity(item)" class="form-control" />
+    </div>
+    <p class="cart-total-price">Totale: {{ item.totalPrice | currency }}</p>
+  </div>
+
+  <!-- Totale complessivo del carrello visualizzato in modo prominente -->
+  <div class="total-cart-container">
+    <h2>Totale Carrello:</h2>
+    <h1 class="total-cart">{{ totalCost | currency }}</h1>
+  </div>
+
+  <div class="cart-actions">
+    <button (click)="clearCart()" class="btn btn-danger">Svuota Carrello</button>
+    <button (click)="purchase()" class="btn btn-primary">Acquista</button>
+  </div>
+</div>
+
+<ng-template #emptyCart>
+  <p class="no-tickets-message">Il carrello è vuoto.</p>
+</ng-template>

@@ -7,7 +7,6 @@ import { User } from '../models/user';
 export interface CustomerOrder {
   id?: number;
   orderTickets?: Array<OrderTicket>;
-  orderTime?: string;
   totalAmount?: number;
   user?: User;
 }

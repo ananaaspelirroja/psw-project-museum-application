@@ -9,15 +9,16 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Integer> {
 
     List<CustomerOrder> findByUser(User user);
 
-    List<CustomerOrder> findByOrderTime(LocalDateTime date);
-
     @Query("select o from CustomerOrder o where o.orderTime > ?1 and o.orderTime < ?2 and o.user = ?3")
     List<CustomerOrder> findByUserAndOrderDateBetween(LocalDateTime startDate, LocalDateTime endDate, User user);
 
+    Optional<CustomerOrder> findByUserAndConfirmedFalse(User user);
 }
+

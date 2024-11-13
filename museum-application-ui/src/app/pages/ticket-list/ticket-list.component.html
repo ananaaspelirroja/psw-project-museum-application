@@ -1,4 +1,4 @@
-<div class="ticket-list-container">
+<<div class="ticket-list-container">
   <app-menu></app-menu>
   <h2>Biglietti</h2>
 
@@ -7,49 +7,46 @@
     {{ showForm ? 'Annulla' : 'Aggiungi un nuovo ticket' }}
   </button>
 
+  <!-- Sezione Carrello, visibile solo agli utenti con ruolo ROLE_USER -->
+  <div *ngIf="isUser">
+    <app-cart #cart></app-cart>
+  </div>
 
-
-
-  <!-- Form per aggiungere un nuovo ticket -->
-  <div *ngIf="showForm" class="ticket-form">
+  <!-- Form per aggiungere un nuovo ticket (solo per admin e se showForm è true) -->
+  <div *ngIf="showForm && isAdmin" class="ticket-form">
     <h3>Nuovo Ticket</h3>
     <form [formGroup]="ticketForm" (ngSubmit)="addTicket()">
       <div class="form-group">
         <label for="name">Nome</label>
-        <input id="name" type="text" formControlName="name" class="form-control" required />
+        <input id="name" formControlName="name" class="form-control" />
       </div>
-
       <div class="form-group">
         <label for="description">Descrizione</label>
-        <textarea id="description" formControlName="description" class="form-control" required></textarea>
+        <input id="description" formControlName="description" class="form-control" />
       </div>
-
       <div class="form-group">
         <label for="price">Prezzo</label>
-        <input id="price" type="number" formControlName="price" class="form-control" required />
+        <input id="price" type="number" formControlName="price" class="form-control" />
       </div>
-
       <div class="form-group">
         <label for="quantity">Quantità</label>
-        <input id="quantity" type="number" formControlName="quantity" class="form-control" required />
+        <input id="quantity" type="number" formControlName="quantity" class="form-control" />
       </div>
-
       <div class="form-group">
-        <label for="exhibition">ID Esibizione</label>
-        <input id="exhibition" type="number" formControlName="exhibition" class="form-control" required />
+        <label for="exhibition">Exhibition ID</label>
+        <input id="exhibition" formControlName="exhibition" class="form-control" />
       </div>
-
-      <button type="submit" class="btn btn-success" [disabled]="ticketForm.invalid">Salva Ticket</button>
+      <button type="submit" class="btn btn-success">Crea Ticket</button>
     </form>
   </div>
 
-  <!-- Elenco dei biglietti -->
+  <!-- Elenco dei biglietti, sempre visibile indipendentemente dallo stato di showForm -->
   <div *ngIf="tickets.length > 0; else noTickets">
+    <h3>Lista dei Biglietti</h3>
     <div *ngFor="let ticket of tickets" class="ticket-item">
       <div class="ticket-name">{{ ticket.name }}</div>
       <div class="ticket-description">{{ ticket.description }}</div>
       <div class="ticket-price">Prezzo: {{ ticket.price | currency }}</div>
-      <div class="ticket-quantity">Quantità disponibile: {{ ticket.quantity }}</div>
 
       <!-- Quantità o campo per modificare la quantità -->
       <div *ngIf="editingTicket?.id === ticket.id; else showQuantity">
@@ -63,11 +60,18 @@
         <div class="ticket-quantity">Quantità disponibile: {{ ticket.quantity }}</div>
       </ng-template>
 
+      <!-- Pulsanti Modifica ed Elimina (solo per admin) -->
       <button *ngIf="isAdmin" (click)="editTicket(ticket)" class="btn btn-warning">Modifica</button>
       <button *ngIf="isAdmin" (click)="deleteTicket(ticket.id!)" class="btn btn-danger">Elimina</button>
 
-      <!-- Bottone Compra, visibile solo agli utenti con ruolo ROLE_USER -->
-      <button *ngIf="isUser" (click)="navigateToCart(ticket.id!)">Compra</button>
+      <!-- Dropdown per selezionare la quantità e bottone Compra (solo per utenti) -->
+      <ng-container *ngIf="isUser">
+        <label for="quantity">Quantità:</label>
+        <select [(ngModel)]="selectedQuantities[ticket.id]" class="form-select">
+          <option *ngFor="let qty of [1, 2, 3, 4, 5]" [value]="qty">{{ qty }}</option>
+        </select>
+        <button (click)="addToCart(ticket)" class="btn btn-success">Compra</button>
+      </ng-container>
     </div>
   </div>
 

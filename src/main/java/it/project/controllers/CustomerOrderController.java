@@ -6,6 +6,7 @@ import it.project.services.CustomerOrderService;
 import it.project.services.UserService;
 import it.project.utils.ResultMessage;
 import it.project.utils.exceptions.OrderNotFoundException;
+import it.project.utils.exceptions.QuantityUnavailableException;
 import it.project.utils.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -15,31 +16,43 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/orders")
+@RequestMapping("/api/my-tickets")
+@CrossOrigin(origins = "http://localhost:4200")
 public class CustomerOrderController {
 
     @Autowired
     private CustomerOrderService customerOrderService;
 
-    @Autowired
-    private UserService userService;
-
     @PostMapping
-    @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<?> createOrder(@RequestBody @Valid CustomerOrder customerOrder, Authentication authentication) {
+    public ResponseEntity<?> addToCart(
+            @RequestParam("ticketId") int ticketId,
+            @RequestParam("quantity") int quantity,
+            Authentication authentication) {
         try {
-            CustomerOrder savedOrder = customerOrderService.addOrder(customerOrder, authentication);
-            return new ResponseEntity<>(new ResultMessage("Order created successfully!", savedOrder.getId()), HttpStatus.OK);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Failed to create order!", e);
+            CustomerOrder cart = customerOrderService.addToCart(ticketId, quantity, authentication);
+            return new ResponseEntity<>(new ResultMessage("Item added to cart!", cart.getId()), HttpStatus.OK);
+        } catch (QuantityUnavailableException e) {
+            return new ResponseEntity<>(new ResultMessage(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 
+    @PostMapping
+    public ResponseEntity<?> createOrder(@RequestBody Map<String, Object> payload, Authentication authentication) {
+        try {
+            List<Map<String, Integer>> items = (List<Map<String, Integer>>) payload.get("items");
+            int totalAmount = (int) payload.get("totalAmount");
+
+            CustomerOrder order = customerOrderService.createOrder(items, totalAmount, authentication);
+            return new ResponseEntity<>(new ResultMessage("Order created successfully!", order.getId()), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ResultMessage("Failed to create order!"), HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @GetMapping("/user-orders")
     public ResponseEntity<?> getOrdersByUser(Authentication authentication) {
@@ -50,7 +63,6 @@ public class CustomerOrderController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found!", e);
         }
     }
-
 
     @GetMapping("/user-orders/{startDate}/{endDate}")
     public ResponseEntity<?> getOrdersInPeriod(
@@ -69,6 +81,5 @@ public class CustomerOrderController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Order not found!", e);
         }
     }
-
 }
 
