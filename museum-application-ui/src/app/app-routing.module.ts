@@ -13,7 +13,8 @@ export const routes: Routes = [
   { path: 'exhibitions', component: ExhibitionListComponent },
   { path: 'exhibitions/:id', component: ExhibitionListComponent },
   {path: 'tickets', component: TicketListComponent },
-  { path: 'my-tickets', component: OrdersComponent }
+  { path: 'my-tickets', component: OrdersComponent },
+  { path: 'orders/all', component: OrdersComponent }
 ];
 
 @NgModule({

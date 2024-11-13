@@ -104,5 +104,11 @@ public class CustomerOrderController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Order not found!", e);
         }
     }
+
+    @GetMapping("/orders/all")
+    public ResponseEntity<?> getAllOrders() {
+        List<CustomerOrder> orders = customerOrderService.getAllOrders();
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
 }
 

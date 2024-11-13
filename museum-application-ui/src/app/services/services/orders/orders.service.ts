@@ -31,6 +31,12 @@ export class OrdersService {
 
   // Metodo per ottenere gli ordini di un utente
   getOrdersByUser(): Observable<any> {
-    return this.http.get(`${this.apiUrlShowPurchases}/my-tickets`);
+    return this.http.get(this.apiUrlShowPurchases);
   }
+
+  getAllOrders(): Observable<any> {
+    return this.http.get(`http://localhost:9090/api/orders/all`);
+  }
+
+
 }

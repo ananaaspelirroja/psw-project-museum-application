@@ -1,24 +1,28 @@
 
+<!-- Menu Component -->
+<app-menu></app-menu>
 
-<div *ngIf="loading">Caricamento ordini...</div>
+<div class="orders-container">
+  <div *ngIf="loading">Caricamento ordini...</div>
 
+  <div *ngIf="!loading && hasOrders">
+    <h2>I tuoi ordini</h2>
+    <ul class="orders-list">
+      <li class="order-item" *ngFor="let order of orders">
+        <span class="order-title"><strong>ID Ordine:</strong> {{ order.id }}</span><br />
+        <span class="order-details">
+          <strong>Data:</strong> {{ order.date }}<br />
+          <strong>Totale:</strong> {{ order.totalAmount | currency }}
+        </span>
+      </li>
+    </ul>
+  </div>
 
+  <div *ngIf="!loading && !hasOrders && !errorMessage">
+    <p>Non hai ordini al momento.</p>
+  </div>
 
-<div *ngIf="!loading && hasOrders">
-  <h2>I tuoi ordini</h2>
-  <ul>
-    <li *ngFor="let order of orders">
-      <strong>ID Ordine:</strong> {{ order.id }}<br />
-      <strong>Data:</strong> {{ order.date }}<br />
-      <strong>Totale:</strong> {{ order.totalAmount | currency }}
-    </li>
-  </ul>
-</div>
-
-<div *ngIf="!loading && !hasOrders && !errorMessage">
-  <p>Non hai ordini al momento.</p>
-</div>
-
-<div *ngIf="errorMessage">
-  <p class="error">{{ errorMessage }}</p>
+  <div *ngIf="errorMessage" class="error-message">
+    <p class="error">{{ errorMessage }}</p>
+  </div>
 </div>

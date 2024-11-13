@@ -20,10 +20,17 @@
         </li>
         <!-- Biglietti -->
         <li class="nav-item">
-          <a *ngIf="keycloakService.isAuthenticated(); else loginLink" class="nav-link" routerLink="/my-tickets">
-            <i class="fas fa-ticket-alt"></i>&nbsp;I miei biglietti
+          <a *ngIf="keycloakService.isAuthenticated(); else loginLink" class="nav-link"
+             [routerLink]="keycloakService.hasRole('ROLE_ADMIN') ? '/orders/all' : '/my-tickets'">
+            <i class="fas fa-ticket-alt"></i>&nbsp;
+            {{ keycloakService.hasRole('ROLE_ADMIN') ? 'Tutti gli ordini' : 'I miei biglietti' }}
           </a>
-          <ng-template #loginLink>
+
+        <ng-template #loginLink>
+          <a class="nav-link" routerLink="/login">Accedi</a>
+        </ng-template>
+
+        <ng-template #loginLink>
             <a class="nav-link" routerLink="/login">
               <i class="fas fa-ticket-alt"></i>&nbsp;I miei biglietti
             </a>

@@ -139,7 +139,7 @@ public class CustomerOrderService {
 
     @Transactional(readOnly = true)
     public List<CustomerOrder> getOrdersByUser(Authentication authentication) throws UserNotFoundException {
-        User user = userRepository.findByUsername(authentication.getName())
+        User user = userRepository.findByCode(authentication.getName())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
         return customerOrderRepository.findByUser(user);
     }

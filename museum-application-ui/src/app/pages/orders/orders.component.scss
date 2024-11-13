@@ -1,0 +1,102 @@
+// Variabili dei colori
+$primary-color: #ff6347;
+$secondary-color: #4682b4;
+$background-light: #ffeedd;
+$background-gray: #f5f5f5;
+$text-color: #333;
+$text-light: #444;
+
+// Stile principale per la lista ordini
+.orders-container {
+  font-family: Arial, sans-serif;
+  padding: 1.5rem;
+  background-color: $background-gray;
+  border-radius: 8px;
+  color: $text-color;
+
+  h2 {
+    color: $primary-color;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .order-item {
+    background-color: $background-light;
+    border: 1px solid lighten($text-color, 40%);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .order-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: $primary-color;
+      margin-bottom: 0.5rem;
+    }
+
+    .order-details {
+      color: $text-light;
+      font-size: 1rem;
+      line-height: 1.5;
+      margin-bottom: 0.5rem;
+
+      .ticket-count {
+        color: $secondary-color;
+        font-size: 0.9rem;
+        font-weight: bold;
+      }
+    }
+
+    .order-total {
+      color: $secondary-color;
+      font-size: 1rem;
+      font-weight: bold;
+      text-align: right;
+      margin-top: 0.5rem;
+    }
+  }
+}
+
+// Form per effettuare ordini
+.order-form {
+  background-color: $background-light;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  h3 {
+    color: $primary-color;
+    margin-bottom: 1rem;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+
+    label {
+      font-weight: bold;
+      color: $text-color;
+    }
+
+    .error {
+      color: $primary-color;
+      font-size: 0.9rem;
+    }
+  }
+
+  .btn-confirm-order {
+    background-color: $primary-color;
+    color: white;
+
+    &:hover {
+      background-color: darken($primary-color, 10%);
+    }
+  }
+}
