@@ -64,13 +64,18 @@ export class KeycloakService {
 
   async getToken(): Promise<string> {
     if (this.keycloak.token) {
+      console.log('Token JWT attuale:', this.keycloak.token); // Debug: mostra il token prima dell'aggiornamento
       await this.keycloak.updateToken(30).catch(() => {
+        console.warn('Il token non può essere aggiornato, reindirizzamento a login');
         this.login(); // Redirect se il token non può essere aggiornato
       });
+      console.log('Token JWT dopo aggiornamento:', this.keycloak.token); // Debug: mostra il token dopo l'aggiornamento
       return this.keycloak.token!;
     }
+    console.warn('Token JWT non disponibile, ritorno stringa vuota');
     return '';
   }
+
 
   async getUserProfile(): Promise<UserProfile | undefined> {
     if (!this._profile) {

@@ -8,6 +8,7 @@ import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -36,7 +37,7 @@ public class CustomerOrder {
     private User user;
 
     @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderTicket> orderTickets;
+    private List<OrderTicket> orderTickets = new ArrayList<>();;
 
     @Version
     @Column(name = "version", nullable = false)

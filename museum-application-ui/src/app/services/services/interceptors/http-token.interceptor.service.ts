@@ -11,13 +11,13 @@ export class HttpTokenInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const token = this.keycloakService.keycloak.token;
     if (token) {
+      console.log("Aggiunta del token JWT nell'header Authorization:", token);
       const authReq = request.clone({
-        headers: new HttpHeaders({
-          Authorization: `Bearer ${token}`
-        })
+        headers: request.headers.set('Authorization', `Bearer ${token}`)
       });
       return next.handle(authReq);
     }
     return next.handle(request);
   }
+
 }

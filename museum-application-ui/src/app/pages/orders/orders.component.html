@@ -1,1 +1,24 @@
-<p>orders works!</p>
+
+
+<div *ngIf="loading">Caricamento ordini...</div>
+
+
+
+<div *ngIf="!loading && hasOrders">
+  <h2>I tuoi ordini</h2>
+  <ul>
+    <li *ngFor="let order of orders">
+      <strong>ID Ordine:</strong> {{ order.id }}<br />
+      <strong>Data:</strong> {{ order.date }}<br />
+      <strong>Totale:</strong> {{ order.totalAmount | currency }}
+    </li>
+  </ul>
+</div>
+
+<div *ngIf="!loading && !hasOrders && !errorMessage">
+  <p>Non hai ordini al momento.</p>
+</div>
+
+<div *ngIf="errorMessage">
+  <p class="error">{{ errorMessage }}</p>
+</div>

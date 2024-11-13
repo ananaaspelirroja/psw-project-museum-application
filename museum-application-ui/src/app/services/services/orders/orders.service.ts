@@ -6,13 +6,31 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class OrdersService {
-
-  private apiUrl = 'http://localhost:9090/api/my-tickets';
+  private apiUrlShowPurchases = 'http://localhost:9090/api/my-tickets';
+  private apiUrl = 'http://localhost:9090/api/tickets';
 
   constructor(private http: HttpClient) {}
 
+  // Metodo per ottenere gli articoli nel carrello dell'utente
+  getCart(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/cart`);
+  }
+
+  // Metodo per aggiungere un ticket al carrello
+  addToCart(ticketId: number, quantity: number): Observable<any> {
+    const url = `http://localhost:9090/api/tickets/add-to-cart?ticketId=${ticketId}&quantity=${quantity}`;
+    return this.http.post(url, {});  // Corpo vuoto perché i parametri sono nell'URL
+  }
+
+
   // Metodo per creare un ordine
-  createOrder(orderData: { ticketId: number; quantity: number }[], totalAmount: number): Observable<any> {
-    return this.http.post(this.apiUrl, { items: orderData, totalAmount });
+  // In OrdersService
+  createOrder(orderData: any[], totalAmount: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/create-order`, { orderData, totalAmount });
+  }
+
+  // Metodo per ottenere gli ordini di un utente
+  getOrdersByUser(): Observable<any> {
+    return this.http.get(`${this.apiUrlShowPurchases}/my-tickets`);
   }
 }

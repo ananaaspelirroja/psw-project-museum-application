@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -50,5 +51,5 @@ public class Ticket {
 
     @JsonIgnore
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.MERGE)
-    private List<OrderTicket> orderTickets;
+    private List<OrderTicket> orderTickets = new ArrayList<>();;
 }

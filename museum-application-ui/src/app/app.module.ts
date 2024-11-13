@@ -8,11 +8,14 @@ import { RouterModule } from '@angular/router';
 import {AppRoutingModule} from "./app-routing.module";
 import {ExhibitionListComponent} from "./pages/exhibition-list/exhibition-list.component";
 import {ExhibitionService} from "./services/services/show-all-exhibitions/exhibition-service.service";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {KeycloakService} from "./services/services/keycloak/keycloak.service";
 import {MenuComponent} from "./modules/menu/menu.component";
 import {TicketListComponent} from "./pages/ticket-list/ticket-list.component";
 import {CartComponent} from "./modules/cart/cart.component";
+import { CommonModule } from '@angular/common';
+import {OrdersComponent} from "./pages/orders/orders.component";
+import {HttpTokenInterceptor} from "./services/services/interceptors/http-token.interceptor.service";
 
 
 
@@ -24,9 +27,11 @@ import {CartComponent} from "./modules/cart/cart.component";
     ExhibitionListComponent,
     MenuComponent,
     TicketListComponent,
-    CartComponent
+    CartComponent,
+    OrdersComponent
   ],
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     BrowserModule,
     HttpClientModule,
@@ -40,6 +45,7 @@ import {CartComponent} from "./modules/cart/cart.component";
   providers: [
     ExhibitionService,
     KeycloakService, // Mantieni il servizio disponibile senza `APP_INITIALIZER`
+    { provide: HTTP_INTERCEPTORS, useClass: HttpTokenInterceptor, multi: true }
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA], // Aggiungi questo schema
   bootstrap: [AppComponent]

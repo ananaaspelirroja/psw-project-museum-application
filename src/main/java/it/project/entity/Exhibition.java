@@ -6,6 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,7 +28,7 @@ public class Exhibition {
     @Column(name = "description", nullable = true, length = 200)
     private String description;
 
-    @OneToMany(mappedBy = "exhibition", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Ticket> tickets;
+    private List<Ticket> tickets = new ArrayList<>();;
 }

@@ -10,6 +10,7 @@ import it.project.repositories.TicketRepository;
 import it.project.repositories.UserRepository;
 import it.project.utils.exceptions.OrderNotFoundException;
 import it.project.utils.exceptions.QuantityUnavailableException;
+import it.project.utils.exceptions.TicketUnavailableException;
 import it.project.utils.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class CustomerOrderService {
@@ -35,16 +37,34 @@ public class CustomerOrderService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private KeycloakService keycloakService;
+
     @Transactional
     public CustomerOrder addToCart(int ticketId, int quantity, Authentication authentication) throws QuantityUnavailableException {
-        User user = userRepository.findByUsername(authentication.getName())
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        String userCode = authentication.getName();  // Usa il nome o un altro campo ID dal token
+
+
+
+        // Cerca l'utente nella tua tabella User
+        Optional<User> userOpt = userRepository.findByCode(userCode);
+
+        User user;
+        if (userOpt.isPresent()) {
+            user = userOpt.get();
+        } else {
+            // Se l'utente non esiste, creane uno nuovo
+            user = new User();
+            user.setCode(userCode); // Imposta ID o altri campi rilevanti
+            user.setUsername(authentication.getName());
+            userRepository.save(user);
+        }
 
         CustomerOrder cart = customerOrderRepository.findByUserAndConfirmedFalse(user)
-                .orElseGet(() -> createNewCart(user));
+                .orElseGet(() -> createNewCart(user)); // Trova o crea un ordine non confermato (carrello)
 
         Ticket ticket = ticketRepository.findById(ticketId)
-                .orElseThrow(() -> new RuntimeException("Ticket not found"));
+                .orElseThrow(() -> new TicketUnavailableException());
 
         OrderTicket orderTicket = cart.getOrderTickets().stream()
                 .filter(ot -> ot.getTicket().getId() == ticketId)
@@ -84,39 +104,38 @@ public class CustomerOrderService {
     }
 
     @Transactional
-    public CustomerOrder createOrder(List<Map<String, Integer>> items, int totalAmount, Authentication authentication) throws QuantityUnavailableException {
+    public CustomerOrder createOrder(Authentication authentication) throws QuantityUnavailableException {
         User user = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        CustomerOrder order = new CustomerOrder();
-        order.setUser(user);
-        order.setTotalAmount(totalAmount);
-        order.setConfirmed(true);
+        // Recupera il carrello esistente
+        CustomerOrder cart = customerOrderRepository.findByUserAndConfirmedFalse(user)
+                .orElseThrow(() -> new RuntimeException("Carrello non trovato"));
 
-        for (Map<String, Integer> item : items) {
-            int ticketId = item.get("ticketId");
-            int quantity = item.get("quantity");
+        // Verifica la disponibilità per ogni item nel carrello
+        for (OrderTicket orderTicket : cart.getOrderTickets()) {
+            Ticket ticket = orderTicket.getTicket();
 
-            Ticket ticket = ticketRepository.findById(ticketId)
-                    .orElseThrow(() -> new RuntimeException("Ticket not found"));
-
-            if (ticket.getQuantity() < quantity) {
-                throw new QuantityUnavailableException("Not enough tickets available for ticket ID: " + ticketId);
+            // Verifica se il biglietto è disponibile
+            if (ticket == null) {
+                throw new TicketUnavailableException("Il biglietto con ID " + orderTicket.getTicket().getId() + " non è più disponibile.");
             }
 
-            OrderTicket orderTicket = new OrderTicket();
-            orderTicket.setCustomerOrder(order);
-            orderTicket.setTicket(ticket);
-            orderTicket.setQuantity(quantity);
-            order.getOrderTickets().add(orderTicket);
+            int requestedQuantity = orderTicket.getQuantity();
 
-            ticket.setQuantity(ticket.getQuantity() - quantity);
+            if (ticket.getQuantity() < requestedQuantity) {
+                throw new QuantityUnavailableException("Not enough tickets available for ticket ID: " + ticket.getId());
+            }
+
+            // Aggiorna la quantità disponibile del biglietto
+            ticket.setQuantity(ticket.getQuantity() - requestedQuantity);
             ticketRepository.save(ticket);
         }
 
-        return customerOrderRepository.save(order);
+        // Conferma il carrello come ordine
+        cart.setConfirmed(true);
+        return customerOrderRepository.save(cart);
     }
-
 
     @Transactional(readOnly = true)
     public List<CustomerOrder> getOrdersByUser(Authentication authentication) throws UserNotFoundException {

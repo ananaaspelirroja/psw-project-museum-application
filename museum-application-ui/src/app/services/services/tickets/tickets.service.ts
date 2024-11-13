@@ -25,8 +25,6 @@ export class TicketService {
     return this.http.put<Ticket>(`${this.apiUrl}/${ticketId}/quantity`, null, { params });
   }
 
-
-
   deleteTicket(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }

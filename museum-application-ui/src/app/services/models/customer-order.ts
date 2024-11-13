@@ -5,8 +5,10 @@
 import { OrderTicket } from '../models/order-ticket';
 import { User } from '../models/user';
 export interface CustomerOrder {
-  id?: number;
-  orderTickets?: Array<OrderTicket>;
-  totalAmount?: number;
-  user?: User;
+  id?: number;                         // Mappa il campo `id` dell'entity
+  orderTickets?: Array<OrderTicket>;    // Rappresenta la lista di `OrderTicket`
+  totalAmount?: number;                 // Totale dell'ordine
+  user?: User;                          // Oggetto `User` che rappresenta l'utente associato
+  orderTime?: Date;                     // Mappa il campo `orderTime` dell'entity
+  confirmed?: boolean;                  // Flag `confirmed`
 }

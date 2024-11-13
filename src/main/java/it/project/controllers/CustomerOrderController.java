@@ -7,6 +7,7 @@ import it.project.services.UserService;
 import it.project.utils.ResultMessage;
 import it.project.utils.exceptions.OrderNotFoundException;
 import it.project.utils.exceptions.QuantityUnavailableException;
+import it.project.utils.exceptions.TicketUnavailableException;
 import it.project.utils.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,14 +22,14 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/my-tickets")
+@RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:4200")
 public class CustomerOrderController {
 
     @Autowired
     private CustomerOrderService customerOrderService;
 
-    @PostMapping
+    @PostMapping("/tickets/add-to-cart")
     public ResponseEntity<?> addToCart(
             @RequestParam("ticketId") int ticketId,
             @RequestParam("quantity") int quantity,
@@ -41,20 +42,42 @@ public class CustomerOrderController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<?> createOrder(@RequestBody Map<String, Object> payload, Authentication authentication) {
+    @PostMapping("/tickets/create-order")
+    public ResponseEntity<ResultMessage> createOrder(Authentication authentication) {
+            if (authentication == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResultMessage("User is not authenticated"));
+            }
         try {
-            List<Map<String, Integer>> items = (List<Map<String, Integer>>) payload.get("items");
-            int totalAmount = (int) payload.get("totalAmount");
+            // Crea l'ordine confermando il carrello esistente
+            CustomerOrder order = customerOrderService.createOrder(authentication);
 
-            CustomerOrder order = customerOrderService.createOrder(items, totalAmount, authentication);
-            return new ResponseEntity<>(new ResultMessage("Order created successfully!", order.getId()), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(new ResultMessage("Failed to create order!"), HttpStatus.BAD_REQUEST);
+            // Restituisce una risposta di successo con l'ID dell'ordine
+            return ResponseEntity.ok(new ResultMessage("Order created successfully!", order.getId()));
+
+        } catch (UserNotFoundException e) {
+            // Gestione dell'eccezione per utente non trovato
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ResultMessage("User not found!"));
+
+        } catch (TicketUnavailableException e) {
+            // Gestione dell'eccezione per biglietto non disponibile
+            return ResponseEntity.status(HttpStatus.GONE)
+                    .body(new ResultMessage("One or more tickets are no longer available."));
+
+        } catch (QuantityUnavailableException e) {
+            // Gestione dell'eccezione per quantità insufficiente di biglietti
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new ResultMessage(e.getMessage()));
+
+        } catch (RuntimeException e) {
+            // Gestione per carrello non trovato o altri errori generali
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ResultMessage("Failed to create order: " + e.getMessage()));
         }
     }
 
-    @GetMapping("/user-orders")
+
+    @GetMapping("/my-tickets")
     public ResponseEntity<?> getOrdersByUser(Authentication authentication) {
         try {
             List<CustomerOrder> orders = customerOrderService.getOrdersByUser(authentication);
@@ -64,7 +87,7 @@ public class CustomerOrderController {
         }
     }
 
-    @GetMapping("/user-orders/{startDate}/{endDate}")
+    @GetMapping("/my-tickets/{startDate}/{endDate}")
     public ResponseEntity<?> getOrdersInPeriod(
             @PathVariable("startDate") @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm") LocalDateTime start,
             @PathVariable("endDate") @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm") LocalDateTime end,
