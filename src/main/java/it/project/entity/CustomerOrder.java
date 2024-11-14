@@ -1,5 +1,6 @@
 package it.project.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -34,9 +35,13 @@ public class CustomerOrder {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id")
+    @ToString.Exclude // Evita riferimenti ciclici in toString
+    @JsonIgnore // Ignora la serializzazione per evitare cicli infiniti
     private User user;
 
     @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude // Evita riferimenti ciclici in toString
+    @JsonIgnore // Ignora la serializzazione per evitare cicli infiniti
     private List<OrderTicket> orderTickets = new ArrayList<>();;
 
     @Version

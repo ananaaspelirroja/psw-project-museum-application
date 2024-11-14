@@ -25,10 +25,12 @@ export class OrdersComponent implements OnInit {
 
   fetchOrders(): void {
     if (this.isAdmin) {
-      // Se l'utente è un admin, recupera tutti gli ordini
+      console.log('Recupero di tutti gli ordini per l\'utente admin...');
       this.ordersService.getAllOrders().subscribe(
         (response) => {
+          console.log('Risposta ottenuta per tutti gli ordini:', response); // Log della risposta completa
           this.orders = response;
+          console.log('Numero di ordini ricevuti:', this.orders.length); // Log della quantità di ordini ricevuti
           this.hasOrders = this.orders.length > 0;
           this.loading = false;
         },
@@ -39,10 +41,12 @@ export class OrdersComponent implements OnInit {
         }
       );
     } else {
-      // Se l'utente è un user, recupera solo i suoi ordini
+      console.log('Recupero degli ordini per l\'utente corrente...');
       this.ordersService.getOrdersByUser().subscribe(
         (response) => {
+          console.log('Risposta ottenuta per gli ordini dell\'utente:', response); // Log della risposta completa
           this.orders = response;
+          console.log('Numero di ordini ricevuti:', this.orders.length); // Log della quantità di ordini ricevuti
           this.hasOrders = this.orders.length > 0;
           this.loading = false;
         },

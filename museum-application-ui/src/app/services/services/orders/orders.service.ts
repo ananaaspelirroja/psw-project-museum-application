@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {CustomerOrder} from "../../models/customer-order";
 
 @Injectable({
   providedIn: 'root'
@@ -30,9 +31,10 @@ export class OrdersService {
   }
 
   // Metodo per ottenere gli ordini di un utente
-  getOrdersByUser(): Observable<any> {
-    return this.http.get(this.apiUrlShowPurchases);
+  getOrdersByUser(): Observable<CustomerOrder[]> {
+    return this.http.get<CustomerOrder[]>(this.apiUrlShowPurchases);
   }
+
 
   getAllOrders(): Observable<any> {
     return this.http.get(`http://localhost:9090/api/orders/all`);

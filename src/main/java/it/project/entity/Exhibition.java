@@ -29,6 +29,7 @@ public class Exhibition {
     private String description;
 
     @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL)
-    @JsonIgnore
+    @JsonIgnore // Ignora la serializzazione per evitare cicli infiniti
+    @ToString.Exclude // Evita riferimenti ciclici in toString
     private List<Ticket> tickets = new ArrayList<>();;
 }

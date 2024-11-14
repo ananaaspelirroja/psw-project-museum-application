@@ -139,10 +139,30 @@ public class CustomerOrderService {
 
     @Transactional(readOnly = true)
     public List<CustomerOrder> getOrdersByUser(Authentication authentication) throws UserNotFoundException {
-        User user = userRepository.findByCode(authentication.getName())
+        String username = authentication.getName();
+
+        // Stampa per verificare l'username
+        System.out.println("Tentativo di recuperare ordini per l'utente con codice: " + username);
+
+        User user = userRepository.findByCode(username)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-        return customerOrderRepository.findByUser(user);
+
+        // Stampa per confermare che l'utente è stato trovato
+        System.out.println("Utente trovato: " + user);
+
+        List<CustomerOrder> orders = customerOrderRepository.findByUser(user);
+
+        // Stampa il numero di ordini trovati per l'utente
+        System.out.println("Numero di ordini trovati per l'utente " + username + ": " + orders.size());
+
+        // Stampa i dettagli di ogni ordine (opzionale)
+        for (CustomerOrder order : orders) {
+            System.out.println("Dettagli ordine: " + order);
+        }
+
+        return orders;
     }
+
 
     @Transactional(readOnly = true)
     public List<CustomerOrder> getOrdersByUserInPeriod(Authentication authentication, LocalDateTime start, LocalDateTime end) throws UserNotFoundException, OrderNotFoundException {

@@ -1,5 +1,6 @@
 package it.project.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.project.utils.UserRole;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
@@ -50,6 +51,8 @@ public class User {
     private UserRole role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
+    @ToString.Exclude // Evita riferimenti ciclici in toString
+    @JsonIgnore // Ignora la serializzazione per evitare cicli infiniti
     private List<CustomerOrder> purchases = new ArrayList<>();;
 
     public String fullName() {
