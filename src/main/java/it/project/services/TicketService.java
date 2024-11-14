@@ -3,6 +3,8 @@ package it.project.services;
 import it.project.entity.Ticket;
 import it.project.repositories.TicketRepository;
 import it.project.utils.exceptions.DuplicateTicketNameException;
+import it.project.utils.exceptions.InvalidTicketException;
+import it.project.utils.exceptions.QuantityUnavailableException;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class TicketService {
 
     @Transactional(readOnly = false)
     public int addTicket(Ticket ticket) throws DuplicateTicketNameException {
+        if(ticket.getQuantity() < 0 || ticket.getPrice() <= 0){
+            throw new InvalidTicketException("La quantità inserita e/o il prezzo inserito non sono validi!");
+        }
         if(ticketRepository.existsByName(ticket.getName())){
             throw new DuplicateTicketNameException();
         }
@@ -55,6 +60,9 @@ public class TicketService {
     public Ticket updateTicketQuantity(int ticketId, int quantity) {
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new IllegalArgumentException("Ticket not found"));
+        if(quantity < 0){
+            throw new QuantityUnavailableException();
+        }
         ticket.setQuantity(quantity);
         return ticketRepository.save(ticket);
     }

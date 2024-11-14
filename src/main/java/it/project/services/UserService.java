@@ -14,23 +14,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private KeycloakService keycloakService;
-
-    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public User registerUser(User user) throws Exception {
-        // Creare utente in Keycloak
-        int userId = keycloakService.createUser(user).getId();
-
-        // Creare l'utente anche nel database locale se l'inserimento in Keycloak ha successo
-        if (userId != 0) {
-            user.setId(userId);
-            return userRepository.save(user); // Salva l'utente nel database
-        } else {
-            throw new Exception("Impossibile creare l'utente in Keycloak.");
-        }
-    }
-
 
     @Transactional(readOnly = true)
     public User findUserById(int userId) throws UserNotFoundException {
