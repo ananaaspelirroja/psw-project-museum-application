@@ -61,9 +61,12 @@ export class CartComponent {
 
   // Svuota il carrello e reimposta il totale
   clearCart(): void {
-    this.cartItems = [];
-    this.totalCost = 0;
-    alert('Carrello svuotato');
+    this.ordersService.clearCart().subscribe(() => {
+      this.cartItems = [];  // Svuota il carrello nel frontend
+      this.totalCost = 0;
+      alert('Carrello svuotato!');
+    });
+
   }
 
   // Esegue l'acquisto inviando i dati del carrello al backend
@@ -80,9 +83,14 @@ export class CartComponent {
         this.router.navigate(['/my-tickets']);
       },
       error => {
-        console.error("Errore durante la creazione dell'ordine:", error);
-        alert('Errore durante la creazione dell\'ordine. Riprova.');
+        if (error.status === 400 && error.error === 'Quantità non valida per l\'ordine. Ogni articolo deve avere una quantità maggiore di 0.') {
+          alert('Errore: ogni articolo deve avere una quantità maggiore di 0 per completare l\'ordine.');
+        } else {
+          console.error("Errore durante la creazione dell'ordine:", error);
+          alert('Errore durante la creazione dell\'ordine. Riprova.');
+        }
       }
     );
   }
+
 }

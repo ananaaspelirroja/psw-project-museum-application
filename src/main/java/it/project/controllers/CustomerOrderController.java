@@ -79,6 +79,13 @@ public class CustomerOrderController {
         }
     }
 
+    @PostMapping("/tickets/clear")
+    public ResponseEntity<Void> clearCart(Authentication authentication) {
+        customerOrderService.clearCart(authentication);
+        return ResponseEntity.noContent().build();
+    }
+
+
 
     @GetMapping("/my-tickets")
     @PreAuthorize("hasRole('ROLE_ROLE_USER')")

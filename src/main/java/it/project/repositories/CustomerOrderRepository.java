@@ -20,5 +20,9 @@ public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, In
     List<CustomerOrder> findByUserAndOrderDateBetween(LocalDateTime startDate, LocalDateTime endDate, User user);
 
     Optional<CustomerOrder> findByUserAndConfirmedFalse(User user);
+
+    List<CustomerOrder> findByUserAndConfirmedTrue(User user);
+
+    List<CustomerOrder> findByConfirmedTrue();
 }
 

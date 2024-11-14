@@ -23,7 +23,6 @@ export class OrdersService {
     return this.http.post(url, {});  // Corpo vuoto perché i parametri sono nell'URL
   }
 
-
   // Metodo per creare un ordine
   // In OrdersService
   createOrder(orderData: any[], totalAmount: number): Observable<any> {
@@ -35,10 +34,14 @@ export class OrdersService {
     return this.http.get<CustomerOrder[]>(this.apiUrlShowPurchases);
   }
 
-
   getAllOrders(): Observable<any> {
     return this.http.get(`http://localhost:9090/api/orders/all`);
   }
+
+  clearCart(): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/clear`, {});
+  }
+
 
 
 }

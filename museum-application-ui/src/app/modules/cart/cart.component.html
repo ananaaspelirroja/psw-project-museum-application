@@ -21,6 +21,7 @@
     <h1 class="total-cart">{{ totalCost | currency }}</h1>
   </div>
 
+  <!-- Pulsante "Svuota Carrello" collegato al metodo clearCart -->
   <div class="cart-actions">
     <button (click)="clearCart()" class="btn btn-danger">Svuota Carrello</button>
     <button (click)="purchase()" class="btn btn-primary">Acquista</button>
@@ -30,4 +31,3 @@
 <ng-template #emptyCart>
   <p class="no-tickets-message">Il carrello è vuoto.</p>
 </ng-template>
--template>

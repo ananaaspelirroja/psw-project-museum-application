@@ -8,10 +8,7 @@ import it.project.repositories.CustomerOrderRepository;
 import it.project.repositories.OrderTicketRepository;
 import it.project.repositories.TicketRepository;
 import it.project.repositories.UserRepository;
-import it.project.utils.exceptions.OrderNotFoundException;
-import it.project.utils.exceptions.QuantityUnavailableException;
-import it.project.utils.exceptions.TicketUnavailableException;
-import it.project.utils.exceptions.UserNotFoundException;
+import it.project.utils.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -37,8 +34,6 @@ public class CustomerOrderService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private KeycloakService keycloakService;
 
     @Transactional(rollbackFor = {QuantityUnavailableException.class, TicketUnavailableException.class})
     public CustomerOrder addToCart(int ticketId, int quantity, Authentication authentication) throws QuantityUnavailableException {
@@ -102,14 +97,25 @@ public class CustomerOrderService {
     }
 
 
-    @Transactional(rollbackFor = {QuantityUnavailableException.class, TicketUnavailableException.class})
-    public CustomerOrder createOrder(Authentication authentication) throws QuantityUnavailableException {
+    @Transactional(rollbackFor = {QuantityUnavailableException.class, TicketUnavailableException.class, InvalidOrderException.class})
+    public CustomerOrder createOrder(Authentication authentication) throws QuantityUnavailableException, InvalidOrderException {
         User user = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         // Recupera il carrello esistente
         CustomerOrder cart = customerOrderRepository.findByUserAndConfirmedFalse(user)
                 .orElseThrow(() -> new RuntimeException("Carrello non trovato"));
+
+        if(cart.getOrderTickets().isEmpty()){
+            throw new InvalidOrderException("Quantità non valida per l'ordine. Ogni articolo deve avere una quantità maggiore di 0.");
+        }
+
+        // Verifica che ogni OrderTicket abbia una quantità maggiore di 0
+        for (OrderTicket orderTicket : cart.getOrderTickets()) {
+            if (orderTicket.getQuantity() <= 0) {
+                throw new InvalidOrderException("Quantità non valida per l'ordine. Ogni articolo deve avere una quantità maggiore di 0.");
+            }
+        }
 
         // Verifica la disponibilità per ogni item nel carrello
         for (OrderTicket orderTicket : cart.getOrderTickets()) {
@@ -123,7 +129,7 @@ public class CustomerOrderService {
             int requestedQuantity = orderTicket.getQuantity();
 
             if (ticket.getQuantity() < requestedQuantity) {
-                throw new QuantityUnavailableException("Not enough tickets available for ticket ID: " + ticket.getId());
+                throw new QuantityUnavailableException("Quantità insufficiente per il biglietto con ID: " + ticket.getId());
             }
 
             // Aggiorna la quantità disponibile del biglietto
@@ -135,6 +141,30 @@ public class CustomerOrderService {
         cart.setConfirmed(true);
         return customerOrderRepository.save(cart);
     }
+
+
+    @Transactional
+    public void clearCart(Authentication authentication) {
+        String userCode = authentication.getName();
+
+        // Cerca l'utente nella tua tabella User
+        User user = userRepository.findByCode(userCode)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        // Trova o crea il carrello non confermato dell'utente
+        CustomerOrder cart = customerOrderRepository.findByUserAndConfirmedFalse(user)
+                .orElseGet(() -> createNewCart(user));  // Usa createNewCart per creare un carrello vuoto
+
+        // Rimuovi tutti gli OrderTicket associati al carrello
+        cart.getOrderTickets().clear();
+
+        // Aggiorna il totale del carrello a zero
+        cart.setTotalAmount(0);
+
+        // Salva il carrello aggiornato
+        customerOrderRepository.save(cart);
+    }
+
 
     @Transactional(readOnly = true)
     public List<CustomerOrder> getOrdersByUser(Authentication authentication) throws UserNotFoundException {
@@ -149,7 +179,7 @@ public class CustomerOrderService {
         // Stampa per confermare che l'utente è stato trovato
         System.out.println("Utente trovato: " + user);
 
-        List<CustomerOrder> orders = customerOrderRepository.findByUser(user);
+        List<CustomerOrder> orders = customerOrderRepository.findByUserAndConfirmedTrue(user);
 
         // Stampa il numero di ordini trovati per l'utente
         System.out.println("Numero di ordini trovati per l'utente " + username + ": " + orders.size());
@@ -179,6 +209,6 @@ public class CustomerOrderService {
 
     @Transactional(readOnly = true)
     public List<CustomerOrder> getAllOrders() {
-        return customerOrderRepository.findAll();
+        return customerOrderRepository.findByConfirmedTrue();
     }
 }
