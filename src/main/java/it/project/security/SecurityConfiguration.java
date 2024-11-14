@@ -21,7 +21,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableMethodSecurity(securedEnabled = true)
+@EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class SecurityConfiguration {
 
     @Bean
@@ -30,8 +30,11 @@ public class SecurityConfiguration {
                 .cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
-                        .anyRequest().authenticated())
+                .requestMatchers("/login/**").permitAll()         // eccezione per endpoint di autenticazione
+                .requestMatchers("/api/exhibitions/**").permitAll()   // eccezione per le exhibitions
+                .requestMatchers("/").permitAll()                 // eccezione per il path home
+                .anyRequest().authenticated())
+
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwtConfigurer ->
                                 jwtConfigurer.jwtAuthenticationConverter(new KeycloakTokenConverter())

@@ -10,10 +10,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toSet;
@@ -30,14 +27,23 @@ public class KeycloakTokenConverter implements Converter<Jwt, AbstractAuthentica
     }
 
     private Collection<? extends GrantedAuthority> extractResourceRoles(Jwt jwt) {
-        var resourceAccess = new HashMap<>(jwt.getClaim("resource_access"));
+        // Estrarre i ruoli da realm_access
+        var realmAccess = (Map<String, Object>) jwt.getClaim("realm_access");
 
-        var eternal = (Map<String, List<String>>) resourceAccess.get("account");
+        // Controlla se ci sono ruoli sotto realm_access
+        if (realmAccess != null && realmAccess.containsKey("roles")) {
+            var roles = (List<String>) realmAccess.get("roles");
 
-        var roles = eternal.get("roles");
+            // Logging per verificare i ruoli estratti
+            System.out.println("Ruoli estratti da realm_access: " + roles);
 
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.replace("-", "_")))
-                .collect(toSet());
+            return roles.stream()
+                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role.replace("-", "_")))
+                    .collect(toSet());
+        }
+
+        // Restituisce una collezione vuota se non ci sono ruoli
+        return Collections.emptySet();
     }
+
 }

@@ -5,10 +5,13 @@
     <div class="cart-ticket-name">{{ item.ticket.name }}</div>
     <p class="cart-ticket-description">{{ item.ticket.description }}</p>
     <p class="cart-ticket-price">Prezzo unitario: {{ item.ticket.price | currency }}</p>
+
+    <!-- Mostra la quantità come testo invece di un input modificabile -->
     <div class="cart-quantity">
       <label for="quantity">Quantità:</label>
-      <input type="number" [(ngModel)]="item.quantity" (ngModelChange)="updateQuantity(item)" class="form-control" />
+      <span>{{ item.quantity }}</span>
     </div>
+
     <p class="cart-total-price">Totale: {{ item.totalPrice | currency }}</p>
   </div>
 
@@ -27,3 +30,4 @@
 <ng-template #emptyCart>
   <p class="no-tickets-message">Il carrello è vuoto.</p>
 </ng-template>
+-template>

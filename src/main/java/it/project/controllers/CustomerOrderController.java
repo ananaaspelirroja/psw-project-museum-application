@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -30,6 +31,7 @@ public class CustomerOrderController {
     private CustomerOrderService customerOrderService;
 
     @PostMapping("/tickets/add-to-cart")
+    @PreAuthorize("hasRole('ROLE_ROLE_USER')")
     public ResponseEntity<?> addToCart(
             @RequestParam("ticketId") int ticketId,
             @RequestParam("quantity") int quantity,
@@ -43,6 +45,7 @@ public class CustomerOrderController {
     }
 
     @PostMapping("/tickets/create-order")
+    @PreAuthorize("hasRole('ROLE_ROLE_USER')")
     public ResponseEntity<ResultMessage> createOrder(Authentication authentication) {
             if (authentication == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResultMessage("User is not authenticated"));
@@ -78,6 +81,7 @@ public class CustomerOrderController {
 
 
     @GetMapping("/my-tickets")
+    @PreAuthorize("hasRole('ROLE_ROLE_USER')")
     public ResponseEntity<?> getOrdersByUser(Authentication authentication) {
         try {
             List<CustomerOrder> orders = customerOrderService.getOrdersByUser(authentication);
@@ -106,6 +110,7 @@ public class CustomerOrderController {
     }
 
     @GetMapping("/orders/all")
+    @PreAuthorize("hasRole('ROLE_ROLE_ADMIN')")
     public ResponseEntity<?> getAllOrders() {
         List<CustomerOrder> orders = customerOrderService.getAllOrders();
         return new ResponseEntity<>(orders, HttpStatus.OK);

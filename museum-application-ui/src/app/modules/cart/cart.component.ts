@@ -20,29 +20,33 @@ export class CartComponent {
 
   constructor(private router: Router, private ordersService: OrdersService) {}
 
-  // Aggiunge un articolo al carrello e aggiorna il totale
   addToCart(ticket: Ticket, quantity: number | string): void {
-    const item = this.cartItems.find(cartItem => cartItem.ticket.id === ticket.id);
-
-    if (item) {
-      item.quantity += Number(quantity);
-      item.totalPrice = item.quantity * item.ticket.price!;
-    } else {
-      this.cartItems.push({
-        ticket,
-        quantity: Number(quantity),
-        totalPrice: ticket.price! * Number(quantity)
-      });
-    }
-
-    this.calculateTotalCost();
-
-    // Opzionalmente, invia l'articolo al backend per aggiornarlo nel carrello
+    // Prima invia l'articolo al backend per verificare se può essere aggiunto al carrello
     this.ordersService.addToCart(ticket.id, Number(quantity)).subscribe(
-      () => console.log('Articolo aggiunto al carrello nel backend'),
-      error => console.error("Errore durante l'aggiunta al carrello:", error)
+      () => {
+        // Solo se la richiesta ha successo, aggiorna il carrello nel frontend
+        const item = this.cartItems.find(cartItem => cartItem.ticket.id === ticket.id);
+
+        if (item) {
+          item.quantity += Number(quantity);
+          item.totalPrice = item.quantity * item.ticket.price!;
+        } else {
+          this.cartItems.push({
+            ticket,
+            quantity: Number(quantity),
+            totalPrice: ticket.price! * Number(quantity)
+          });
+        }
+
+        alert('Articolo aggiunto al carrello!');
+        this.calculateTotalCost();
+      },
+      error => {
+        alert("Errore durante l'aggiunta dell'item al carrello! Aggiornare la pagina e verificare che esso sia ancora disponibile");
+      }
     );
   }
+
 
   // Aggiorna la quantità di un articolo nel carrello e ricalcola il totale
   updateQuantity(item: CartItem): void {

@@ -22,7 +22,7 @@ public class TicketController {
 
 
     @PostMapping
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ROLE_ADMIN')")
     public ResponseEntity<?> createTicket(@RequestBody @Valid Ticket ticket) {
         try {
             int createdTicketId = ticketService.addTicket(ticket);
@@ -78,7 +78,7 @@ public class TicketController {
 
 
     @PutMapping("/{ticket-id}/quantity")
-    //@PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasRole('ROLE_ROLE_ADMIN')")
     public ResponseEntity<?> updateTicketQuantity(@PathVariable("ticket-id") int ticketId, @RequestParam int quantity) {
         try {
             Ticket updatedTicket = ticketService.updateTicketQuantity(ticketId, quantity);
@@ -90,7 +90,7 @@ public class TicketController {
     }
 
     @DeleteMapping("/{ticket-id}")
-    //@PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasRole('ROLE_ROLE_ADMIN')")
     public ResponseEntity<?> deleteTicket(@PathVariable("ticket-id") int ticketId) {
         ticketService.deleteTicket(ticketId);
         return ResponseEntity.ok(new ResultMessage("Ticket deleted successfully"));

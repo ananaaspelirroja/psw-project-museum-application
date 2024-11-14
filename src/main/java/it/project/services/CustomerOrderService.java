@@ -40,11 +40,9 @@ public class CustomerOrderService {
     @Autowired
     private KeycloakService keycloakService;
 
-    @Transactional
+    @Transactional(rollbackFor = {QuantityUnavailableException.class, TicketUnavailableException.class})
     public CustomerOrder addToCart(int ticketId, int quantity, Authentication authentication) throws QuantityUnavailableException {
         String userCode = authentication.getName();  // Usa il nome o un altro campo ID dal token
-
-
 
         // Cerca l'utente nella tua tabella User
         Optional<User> userOpt = userRepository.findByCode(userCode);
@@ -103,7 +101,8 @@ public class CustomerOrderService {
         cart.setTotalAmount((int) total);
     }
 
-    @Transactional
+
+    @Transactional(rollbackFor = {QuantityUnavailableException.class, TicketUnavailableException.class})
     public CustomerOrder createOrder(Authentication authentication) throws QuantityUnavailableException {
         User user = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));

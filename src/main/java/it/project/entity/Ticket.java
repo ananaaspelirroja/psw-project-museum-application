@@ -51,6 +51,6 @@ public class Ticket {
 
     @ToString.Exclude // Evita riferimenti ciclici in toString
     @JsonIgnore
-    @OneToMany(mappedBy = "ticket", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
     private List<OrderTicket> orderTickets = new ArrayList<>();;
 }

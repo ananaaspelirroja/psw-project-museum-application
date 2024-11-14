@@ -8,7 +8,7 @@
   </button>
 
   <!-- Sezione Carrello, visibile solo agli utenti con ruolo ROLE_USER -->
-  <div *ngIf="isUser">
+  <div *ngIf="!isAdmin">
     <app-cart #cart></app-cart>
   </div>
 
@@ -65,7 +65,7 @@
       <button *ngIf="isAdmin" (click)="deleteTicket(ticket.id!)" class="btn btn-danger">Elimina</button>
 
       <!-- Dropdown per selezionare la quantità e bottone Compra (solo per utenti) -->
-      <ng-container *ngIf="isUser">
+      <ng-container *ngIf="!isAdmin">
         <label for="quantity">Quantità:</label>
         <select [(ngModel)]="selectedQuantities[ticket.id]" class="form-select">
           <option *ngFor="let qty of [1, 2, 3, 4, 5]" [value]="qty">{{ qty }}</option>
