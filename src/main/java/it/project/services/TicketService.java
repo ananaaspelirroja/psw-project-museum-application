@@ -61,6 +61,8 @@ public class TicketService {
 
     @Transactional
     public void deleteTicket(int ticketId) {
-        ticketRepository.deleteById(ticketId);
+        ticketRepository.findById(ticketId).ifPresent(ticket -> {  // Applicazione del lock pessimistico
+            ticketRepository.delete(ticket);
+        });
     }
 }

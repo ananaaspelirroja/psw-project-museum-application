@@ -1,32 +1,24 @@
-<!-- Menu Component -->
 <app-menu></app-menu>
 
 <div class="orders-container">
-  <!-- Messaggio di caricamento -->
   <div *ngIf="loading">Caricamento ordini...</div>
 
-  <!-- Se sono presenti ordini -->
   <div *ngIf="!loading && hasOrders">
-    <h2>I tuoi ordini</h2>
+    <h2>Ordini per l'utente</h2>
     <ul class="orders-list">
       <li *ngFor="let order of orders" class="order-item">
-        <span class="order-title">
-          <strong>ID Ordine:</strong> {{ order.id }}
-        </span><br />
-        <span class="order-details">
-          <strong>Data:</strong> {{ order.date }}<br />
-          <strong>Totale:</strong> {{ order.totalAmount | currency }}
-        </span>
+        <strong>ID Ordine:</strong> {{ order.id }}<br />
+        <strong>Data:</strong> {{ order.orderTime | date }}<br />
+        <strong>Totale:</strong> {{ order.totalAmount | currency }}
+        <!-- Aggiungi altri dettagli come necessario -->
       </li>
     </ul>
   </div>
 
-  <!-- Se non ci sono ordini -->
   <div *ngIf="!loading && !hasOrders && !errorMessage">
-    <p>Non hai ordini al momento.</p>
+    <p>Non ci sono ordini per questo utente.</p>
   </div>
 
-  <!-- Messaggio di errore -->
   <div *ngIf="errorMessage" class="error-message">
     <p class="error">{{ errorMessage }}</p>
   </div>

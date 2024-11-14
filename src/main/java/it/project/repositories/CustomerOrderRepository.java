@@ -24,5 +24,7 @@ public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, In
     List<CustomerOrder> findByUserAndConfirmedTrue(User user);
 
     List<CustomerOrder> findByConfirmedTrue();
+
+    List<CustomerOrder> findByUserCode(String userCode); // Per ordini di un singolo utente
 }
 

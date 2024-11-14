@@ -211,4 +211,9 @@ public class CustomerOrderService {
     public List<CustomerOrder> getAllOrders() {
         return customerOrderRepository.findByConfirmedTrue();
     }
+
+    @Transactional(readOnly = true)
+    public List<CustomerOrder> getOrdersByUserCode(String userCode) {
+        return customerOrderRepository.findByUserCode(userCode);
+    }
 }

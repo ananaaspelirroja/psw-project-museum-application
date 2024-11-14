@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { OrdersService } from '../../services/services/orders/orders.service';
+import {OrdersService} from "../../services/services/orders/orders.service";
 import {KeycloakService} from "../../services/services/keycloak/keycloak.service";
 
 
@@ -13,24 +13,23 @@ export class OrdersComponent implements OnInit {
   hasOrders: boolean = false;
   loading: boolean = true;
   errorMessage: string = '';
-  isAdmin: boolean = false;  // Aggiungi una variabile per determinare se l'utente è un admin
+  isAdmin: boolean = false;
 
-  constructor(private ordersService: OrdersService, private keycloakService: KeycloakService) {}
+  constructor(
+    private ordersService: OrdersService,
+    private keycloakService: KeycloakService
+  ) {}
 
   ngOnInit(): void {
-    // Verifica se l'utente ha il ruolo ROLE_ADMIN
     this.isAdmin = this.keycloakService.hasRole('ROLE_ADMIN');
     this.fetchOrders();
   }
 
   fetchOrders(): void {
     if (this.isAdmin) {
-      console.log('Recupero di tutti gli ordini per l\'utente admin...');
       this.ordersService.getAllOrders().subscribe(
         (response) => {
-          console.log('Risposta ottenuta per tutti gli ordini:', response); // Log della risposta completa
           this.orders = response;
-          console.log('Numero di ordini ricevuti:', this.orders.length); // Log della quantità di ordini ricevuti
           this.hasOrders = this.orders.length > 0;
           this.loading = false;
         },
@@ -41,12 +40,9 @@ export class OrdersComponent implements OnInit {
         }
       );
     } else {
-      console.log('Recupero degli ordini per l\'utente corrente...');
       this.ordersService.getOrdersByUser().subscribe(
         (response) => {
-          console.log('Risposta ottenuta per gli ordini dell\'utente:', response); // Log della risposta completa
           this.orders = response;
-          console.log('Numero di ordini ricevuti:', this.orders.length); // Log della quantità di ordini ricevuti
           this.hasOrders = this.orders.length > 0;
           this.loading = false;
         },

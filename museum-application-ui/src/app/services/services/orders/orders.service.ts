@@ -42,6 +42,11 @@ export class OrdersService {
     return this.http.post<void>(`${this.apiUrl}/clear`, {});
   }
 
+  // Metodo per ottenere gli ordini di un utente specifico usando userCode
+  getOrdersByUserCode(userCode: string): Observable<CustomerOrder[]> {
+    return this.http.get<CustomerOrder[]>(`${this.apiUrl}/${userCode}`);
+  }
+
 
 
 }

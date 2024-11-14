@@ -122,5 +122,10 @@ public class CustomerOrderController {
         List<CustomerOrder> orders = customerOrderService.getAllOrders();
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
+
+    @GetMapping("/orders/{userCode}")
+    public List<CustomerOrder> getOrdersByUser(@PathVariable String userCode) {
+        return customerOrderService.getOrdersByUserCode(userCode);
+    }
 }
 
