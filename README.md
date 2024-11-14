@@ -1,4 +1,4 @@
-Here's the description in English:
+
 
 ---
 
